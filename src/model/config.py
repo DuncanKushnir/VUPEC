@@ -1,0 +1,1 @@
+DEFAULT_DRIVE_CYCLE = "nedc"

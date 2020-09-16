@@ -1,0 +1,13 @@
+# tires
+
+name default
+size P255/65R16
+crr 0.09
+
+name default_suv
+size P255/65R18
+
+name default_compact
+size P220/55R14
+
+

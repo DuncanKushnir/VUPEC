@@ -1,0 +1,19 @@
+# This file contains the default values for drivetrains
+# New entries start with the name command
+# include begins with the included names (from anywhere in this directory)
+# % indicates a component, derived from that directory, e.g. %tires RPDS would try to look up 
+# RPDS in data/tires and include that as a sub-dictionary
+
+name default
+final_ratio 4.5
+eff_diff 0.99
+drive_n 2
+
+name fwd
+
+name rwd
+eff_diff 0.98
+
+name 4wd
+eff_diff 0.97
+drive_n 4

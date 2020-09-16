@@ -1,0 +1,4 @@
+# NEDC Driving cycle
+name nedc
+include edc-15 4
+include eudc

@@ -1,0 +1,42 @@
+# This file contains the default values for vehicles
+# New entries start with the name command
+# include begins with the included names (from anywhere in this directory)
+# % indicates a component, derived from that directory, e.g. %tires RPDS would try to look up 
+# RPDS in data/tires and include that as a sub-dictionary
+
+name default
+type sedan
+mass 1644
+cda 0.8
+has_regen False
+#%engine petrol v4 2
+#%transmission auto 8
+%drivetrain fwd
+%tires default
+%accessories default
+
+name sedan
+
+name coupe
+type coupe
+mass 1400
+cda 0.7
+
+name suv
+mass 2200
+cda 1.0
+%tires default_suv
+
+name compact
+mass 1100
+cda 0.6
+%tires default_compact
+
+name bev
+mass 1760
+cda 0.7
+#%engine fm
+#%drivetrain efwd
+%accessories default
+
+name phev

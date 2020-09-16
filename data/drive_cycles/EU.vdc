@@ -1,0 +1,52 @@
+# Urban and Extra Urban drive cycles
+#########################
+
+# reference http://www.unece.org/fileadmin/DAM/trans/main/wp29/wp29regs/2015/R101r3e.pdf
+
+name edc-15
+v_unit kmh
+
+# v gives a new datapoint, format is v, speed, time
+v 0 +11
+v 15 +4
+v 15 +8
+v 0 +5
+v 0 +21
+v 15 +6
+v 32 +6
+v 32 +24
+v 0 +11
+v 0 117
+v 15 +6
+v 35 +11
+v 50 +9
+v 50 +12
+v 35 +8
+v 35 +15
+v 0 +10
+v 0 +7
+
+#########################
+
+name eudc
+v_unit kmh
+
+# v gives a new datapoint, format is v, speed, time
+v 0 +20
+v 15 +6
+v 35 +11
+v 50 +10
+v 70 +14
+v 70 +50
+v 50 +8
+v 50 +69
+v 70 +13
+v 70 +50
+v 100 +35
+v 100 +30
+v 120 +20
+v 120 +10
+v 80 +16
+v 50 +8
+v 0 +10
+v 0 +20

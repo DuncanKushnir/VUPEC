@@ -1,0 +1,9 @@
+# This file contains the default values for engines
+# New entries start with the name command
+# include begins with the included names (from anywhere in this directory)
+# % indicates a component, derived from that directory, e.g. %tires RPDS would try to look up 
+# RPDS in data/tires and include that as a sub-dictionary
+
+name petrol_v4_2
+fuel petrol
+peak_bte 0.32

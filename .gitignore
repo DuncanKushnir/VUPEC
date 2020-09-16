@@ -1,0 +1,18 @@
+# Don't sync with git..
+# Compiled python modules.
+*.pyc
+
+# Program generated logs
+/logs/
+
+# Cache Files
+/cache/
+*.cache
+
+# Pycharm project stuff
+/.cache/
+/.idea/
+
+# Publish Exclusions (copyrighted papers, dev files, etc.)
+/papers/
+/extra/

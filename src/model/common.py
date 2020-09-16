@@ -79,15 +79,3 @@ class ObjDict(dict):
             del overrides["_include"]
 
         self.update(overrides)
-
-
-if __name__ == "__main__":
-    X = ObjDict.wrap_dict({"a": 1, "b": 2, "c": {"d": 3, "e": 4}})
-    print(X.a)
-    print(X.c)
-    print(type(X.c))
-    print(X.c.d)
-    print(X.to_json())
-    Y = X.to_json()
-    Z = ObjDict.from_json(Y)
-    print(Z.c.d)

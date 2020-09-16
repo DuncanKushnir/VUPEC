@@ -11,11 +11,13 @@ From first physics principles through to energy inputs to the vehicle (petrol, n
 ## Features
 - All relevant drive cycles included as well as parsing engine.. paint your own!
 - Accurate physics, even with altitude and temperature corrections
-- Fully seperate import engine for vehicles and components
+- Fully separate import engine for vehicles and components
 - Calculates standard driving cycle energy use to within 5% of reported - all vehicle makes, all
  drive cycles
  - graph friendly result dumping
  - launch from excel control panel or from JSON-rpc
- - Monte Carlo testing of variable sensitivity
+ 
+ ##### In progress
+ - Monte Carlo testing of variable sensitivity (wiring up)
  
  ##

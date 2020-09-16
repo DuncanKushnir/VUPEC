@@ -1,8 +1,8 @@
 """
-Utilities for handling I/O
+Utilities for handling I/O.  This file will scan the data directory, loading and
+importing anything that it finds there.
 """
 
-import pandas as pd
 from collections import defaultdict
 
 import model.drive_cycles

@@ -37,4 +37,10 @@ def config_from_panel():
 
 
 if __name__ == "__main__":
+    from util.excel_utils import extract_control_panel_values
+
+    # Tests raw panel results
+    print(extract_control_panel_values())
+
+    # Tests the results after configuring
     print(config_from_panel())

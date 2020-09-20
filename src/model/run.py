@@ -7,7 +7,7 @@ SRC_DIR = os.path.dirname(MODEL_DIR)
 sys.path.append(SRC_DIR)
 
 import model.energy_calculator as calc
-from util.locations import *
+import model.output as output
 
 
 def run_model_from_json():
@@ -19,12 +19,7 @@ def run_model_from_control_panel():
 
     global_parameters, vehicle, drive_cycle = config_from_panel()
     model_df = calc.run_model(global_parameters, vehicle, drive_cycle)
-
-    output_stem = global_parameters["run_datetime"] + "_"
-    output_data = os.path.join(OUTPUT_DIR, output_stem + "data.csv")
-
-    output_summ = os.path.join(OUTPUT_DIR, output_stem + "summary.txt")
-    model_df.to_csv(output_data, index=False)
+    output.output_model_run(global_parameters, model_df, drive_cycle)
 
 
 if __name__ == "__main__":

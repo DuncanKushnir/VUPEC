@@ -11,8 +11,48 @@ from model.battery import process_battery_demand
 from model.motors import apply_motor_efficiencies
 from model.constants import *
 
+STANDARD_PIPELINE = [
+    add_external_physics,
+    add_accessory_demands,
+    allocate_demands,
+    process_battery_demand,
+    apply_motor_efficiencies,
+]
 
-def run_model(global_params, vehicle, drive_cycle):
+
+def run_pipeline_trace(pipeline, global_parameters, vehicle, model_df):
+    """
+    """
+    pipeline_summary = ["Pipeline summary and trace"]
+    cols = set(model_df.columns)
+    pipeline_summary.append(f"Initial columns: {sorted(cols)}")
+    for operation in pipeline:
+        start_time = pd.Timestamp.utcnow()
+        pipeline_summary.append(f"\nEntering function: {operation.__name__}")
+        model_df = operation(global_parameters, vehicle, model_df)
+        pipeline_summary.append(
+            f"-> function output: {sorted(set(model_df.columns) - cols)}"
+        )
+        cols = set(model_df.columns)
+        pipeline_summary.append(
+            f"-> execution time: "
+            f"{(pd.Timestamp.utcnow()-start_time).total_seconds()*1000} milliseconds"
+        )
+
+    for line in pipeline_summary:
+        print(line)
+    return model_df
+
+
+def run_pipeline(pipeline, global_parameters, vehicle, model_df):
+    """
+    """
+    for operation in pipeline:
+        model_df = operation(global_parameters, vehicle, model_df)
+    return model_df
+
+
+def run_model(global_params, vehicle, drive_cycle, func_trace = False):
     """
     :param global_params: a dictionary of global parameters
     :param vehicle: a vehicle.Vehicle object
@@ -23,15 +63,14 @@ def run_model(global_params, vehicle, drive_cycle):
 
     vehicle = setup_vehicle(global_params, vehicle)
     model_df = drive_cycle.to_df()
-    model_df = add_external_physics(global_params, vehicle, model_df)
-    model_df = add_accessory_demands(global_params, vehicle, model_df)
-    model_df = allocate_demands(global_params, vehicle, model_df)
-    model_df = process_battery_demand(global_params, vehicle, model_df)
-    model_df = apply_motor_efficiencies(global_params, vehicle, model_df)
+    if func_trace:
+        model_df = run_pipeline_trace(STANDARD_PIPELINE, global_params, vehicle,
+                                      model_df)
+    else:
+        model_df = run_pipeline(STANDARD_PIPELINE, global_params, vehicle, model_df)
 
     model_df["energy_from_engine"] = (
-        model_df[model_df["energy_at_wheel"] > 0]["energy_at_wheel"]
-    ) / 0.98
+        model_df[model_df["energy_wheel"] > 0]["energy_wheel"]) / 0.98
     model_df["thermal_input"] = model_df["energy_from_engine"] / 0.25
     model_df["petrol_input"] = model_df["thermal_input"] / 42000000
 
@@ -61,16 +100,13 @@ if __name__ == "__main__":
         "temperature": 20,
     }
 
-    drive_cycle = data["drive_cycles"]["hwfe"]
+    drive_cycle = data["drive_cycles"]["nedc"]
     model = run_model(parameters, vehicle, drive_cycle)
     # print(model.head())
     print(model["loss_rolling"].sum(), "J lost to rolling resistance")
     print(model["loss_drag"].sum(), "J lost to drag")
 
-    print(
-        model[model["energy_at_wheel"] < 1]["energy_at_wheel"].sum() * -1,
-        "J lost to " "braking",
-    )
+    print(model["loss_friction_brake"].sum(), "J lost to braking")
 
     print(model["energy_from_engine"].sum(), "J from engine at brake")
 

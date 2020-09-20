@@ -8,6 +8,8 @@ name default
 type sedan
 mass 1644
 cda 0.8
+eff_alternator 0.8
+battery False
 has_regen False
 #%engine petrol v4 2
 #%transmission auto 8

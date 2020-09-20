@@ -6,8 +6,9 @@ import json
 
 class ObjDict(dict):
     """
-    Allow using dicts as namespaces, eg {a:1, b:2} -> obj.a  (1)
-    Also implements json interface
+    Extends python dictionary functionality
+    > Allows use as namespaces, eg {a:1, b:2} -> obj.a  (1)
+    > Implements json interface
     """
 
     def __getattr__(self, key):
@@ -52,8 +53,9 @@ class ObjDict(dict):
         :return: a boolean indicating if the drive cycle contains references (False)
         or if all segments have been sourced and initialized correctly
         """
-        if self._include:
-            return False
+        if "_include" in self:
+            if self._include:
+                return False
         return True
 
     def resolve(self, data_structure):

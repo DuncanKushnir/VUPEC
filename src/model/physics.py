@@ -159,16 +159,16 @@ def add_external_physics(global_params, vehicle, model_df):
     model_df["kinetic_end"] = kinetic_energies(vehicle, model_df["end_v"])
     model_df["kinetic_delta"] = model_df["kinetic_end"] - model_df["kinetic_start"]
     model_df["grav_delta"] = grav_energy(mass, model_df["delta_alt"])
-    model_df["energy_at_wheel"] = (
+    model_df["energy_wheel"] = (
         model_df["kinetic_delta"]
         + model_df["loss_drag"]
         + model_df["loss_rolling"]
         + model_df["grav_delta"]
     )
 
-    model_df["power_at_wheel"] = model_df["energy_at_wheel"] / model_df["duration"]
-    model_df["force_at_wheel"] = model_df["power_at_wheel"] / model_df["delta_d"]
+    model_df["power_wheel"] = model_df["energy_wheel"] / model_df["duration"]
+    model_df["force_wheel"] = model_df["power_wheel"] / model_df["delta_d"]
     model_df["omega_wheel"] = model_df["avg_v"] / vehicle.tires.radius
-    model_df["torque_at_wheel"] = model_df["power_at_wheel"] / model_df["omega_wheel"]
+    model_df["torque_wheel"] = model_df["power_wheel"] / model_df["omega_wheel"]
 
     return model_df

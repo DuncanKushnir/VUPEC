@@ -61,9 +61,10 @@ def run_model(global_params, vehicle, drive_cycle, func_trace = False):
     :return: a dataframe with the summary information
     """
     start = pd.Timestamp.utcnow()
+    model_df = drive_cycle.copy()
 
     vehicle = setup_vehicle(global_params, vehicle)
-    model_df = drive_cycle.to_df()
+
     if func_trace:
         model_df = run_pipeline_trace(STANDARD_PIPELINE, global_params, vehicle,
                                       model_df)
@@ -100,6 +101,7 @@ if __name__ == "__main__":
     }
 
     drive_cycle = data["drive_cycles"]["nedc"]
+    drive_cycle = drive_cycle.to_df()
     model = run_model(parameters, vehicle, drive_cycle)
     # print(model.head())
     print(model["loss_rolling"].sum(), "J lost to rolling resistance")
@@ -114,7 +116,7 @@ if __name__ == "__main__":
     print("Cycle Economy\n*******************")
     print("petrol:")
     cycle_economy = (
-        model["input_petrol"].sum() * 100 * 1000 / drive_cycle.total_distance
+        model["input_petrol"].sum() * 100 * 1000 / drive_cycle.delta_d.sum()
     )
     print("cycle_economy:", cycle_economy, "L/100km")
     cycle_economym = GALUS_L / (cycle_economy / 100 * MILE_KM)
@@ -133,3 +135,6 @@ if __name__ == "__main__":
             print(f'"{item}": ("", ""),')
 
 
+    print(vehicle.to_json())
+    import json
+    print(json.dumps(parameters))

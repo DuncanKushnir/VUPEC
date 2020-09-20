@@ -9,6 +9,7 @@ from model.accessories import add_accessory_demands
 from model.drivetrain import allocate_demands
 from model.battery import process_battery_demand
 from model.motors import apply_motor_efficiencies
+from model.labels import OUTPUT_DF_DESC
 from model.constants import *
 
 STANDARD_PIPELINE = [
@@ -71,8 +72,6 @@ def run_model(global_params, vehicle, drive_cycle, func_trace = False):
 
     model_df["energy_from_engine"] = (
         model_df[model_df["energy_wheel"] > 0]["energy_wheel"]) / 0.98
-    model_df["thermal_input"] = model_df["energy_from_engine"] / 0.25
-    model_df["petrol_input"] = model_df["thermal_input"] / 42000000
 
     end = pd.Timestamp.utcnow()
 
@@ -115,10 +114,22 @@ if __name__ == "__main__":
     print("Cycle Economy\n*******************")
     print("petrol:")
     cycle_economy = (
-        model["petrol_input"].sum() * 100 * 1000 / drive_cycle.total_distance
+        model["input_petrol"].sum() * 100 * 1000 / drive_cycle.total_distance
     )
     print("cycle_economy:", cycle_economy, "L/100km")
     cycle_economym = GALUS_L / (cycle_economy / 100 * MILE_KM)
     print("cycle_economy:", cycle_economym, "mpg")
     end = pd.Timestamp.utcnow()
     print((end - start).total_seconds(), "total seconds")
+
+    print("\nDEV: Changes in labels")
+    print("ADD LABELS:")
+    for item in model.columns:
+        if item not in OUTPUT_DF_DESC:
+            print(f'"{item}": ("", ""),')
+    print('REMOVE LABELS:')
+    for item in OUTPUT_DF_DESC:
+        if item not in model.columns:
+            print(f'"{item}": ("", ""),')
+
+

@@ -1,7 +1,7 @@
 """
 Calculates power for accessory loads
 """
-
+import model.physics as physics
 
 def belt_connected_accessories(global_params, vehicle, model_df):
     """
@@ -11,6 +11,7 @@ def belt_connected_accessories(global_params, vehicle, model_df):
     :param vehicle: a vehicle.Vehicle object
     :param model_df: the model dataframe
     """
+
     return model_df
 
 

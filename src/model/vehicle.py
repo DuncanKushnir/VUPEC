@@ -10,10 +10,8 @@ def setup_vehicle(global_params, vehicle):
     vehicle.tires.update(parse_tire_string(vehicle.tires.size))
 
     # Setup battery
-    if 'battery' in vehicle:
-        print('setup battery')
-
-
+    if "battery" in vehicle:
+        print("setup battery")
 
     return vehicle
 

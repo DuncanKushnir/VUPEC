@@ -3,6 +3,7 @@ Calculates power for accessory loads
 """
 import model.physics as physics
 
+
 def belt_connected_accessories(global_params, vehicle, model_df):
     """
     Add the accessory demands for belt connected accessories

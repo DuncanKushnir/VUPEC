@@ -53,7 +53,7 @@ def run_pipeline(pipeline, global_parameters, vehicle, model_df):
     return model_df
 
 
-def run_model(global_params, vehicle, drive_cycle, func_trace = False):
+def run_model(global_params, vehicle, drive_cycle, func_trace=False):
     """
     :param global_params: a dictionary of global parameters
     :param vehicle: a vehicle.Vehicle object
@@ -66,13 +66,15 @@ def run_model(global_params, vehicle, drive_cycle, func_trace = False):
     vehicle = setup_vehicle(global_params, vehicle)
 
     if func_trace:
-        model_df = run_pipeline_trace(STANDARD_PIPELINE, global_params, vehicle,
-                                      model_df)
+        model_df = run_pipeline_trace(
+            STANDARD_PIPELINE, global_params, vehicle, model_df
+        )
     else:
         model_df = run_pipeline(STANDARD_PIPELINE, global_params, vehicle, model_df)
 
     model_df["energy_from_engine"] = (
-        model_df[model_df["energy_wheel"] > 0]["energy_wheel"]) / 0.98
+        model_df[model_df["energy_wheel"] > 0]["energy_wheel"]
+    ) / 0.98
 
     end = pd.Timestamp.utcnow()
 
@@ -115,9 +117,7 @@ if __name__ == "__main__":
 
     print("Cycle Economy\n*******************")
     print("petrol:")
-    cycle_economy = (
-        model["input_petrol"].sum() * 100 * 1000 / drive_cycle.delta_d.sum()
-    )
+    cycle_economy = model["input_petrol"].sum() * 100 * 1000 / drive_cycle.delta_d.sum()
     print("cycle_economy:", cycle_economy, "L/100km")
     cycle_economym = GALUS_L / (cycle_economy / 100 * MILE_KM)
     print("cycle_economy:", cycle_economym, "mpg")
@@ -129,12 +129,12 @@ if __name__ == "__main__":
     for item in model.columns:
         if item not in OUTPUT_DF_DESC:
             print(f'"{item}": ("", ""),')
-    print('REMOVE LABELS:')
+    print("REMOVE LABELS:")
     for item in OUTPUT_DF_DESC:
         if item not in model.columns:
             print(f'"{item}": ("", ""),')
 
-
     print(vehicle.to_json())
     import json
+
     print(json.dumps(parameters))

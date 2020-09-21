@@ -6,6 +6,7 @@ importing anything that it finds there.
 from collections import defaultdict
 
 import model.drive_cycles
+from model.common import ObjDict
 from util.io import process_subdir_files
 from util import locations
 import model.parsers as parsers
@@ -47,7 +48,7 @@ for dirname, results in data.items():
                         f"Can not find {lookup_key} in {target} for "
                         f"inclusion in {dirname}:{key}"
                     )
-                setattr(obj, target, data[target][lookup_key])
+                setattr(obj, target, ObjDict.wrap_dict(data[target][lookup_key]))
             del obj["_sub_objects"]
 
 

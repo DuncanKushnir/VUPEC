@@ -18,8 +18,12 @@ def extract_key_val(worksheet, cols):
     result = {}
     vals = grab_column_vals(worksheet, cols)
     for pair in zip(vals[0], vals[1]):
-        if pair[0] is not None:
-            val = "default" if pair[1] is None else pair[1].lower()
+        if pair[0] is not None and pair[1] is not None:
+            if type(pair[1]) in [float, int]:
+                val = pair[1]
+            else:
+                val = pair[1].lower()
+
             result[pair[0].lower()] = val
     return result
 
@@ -30,4 +34,5 @@ def extract_control_panel_values():
     for worksheet_name in wb.sheetnames:
         sheet_dict = extract_key_val(wb[worksheet_name], ["C", "D"])
         panel_dicts[worksheet_name.lower()] = sheet_dict
+    panel_dicts["_datatype"] = "control_panel"
     return panel_dicts

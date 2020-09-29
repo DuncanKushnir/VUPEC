@@ -28,7 +28,8 @@ AIR_ALT_EXP = (-1 * EARTH_G * MM_EARTH_AIR) / (AIR_UNIV_GAS_CONST * AIR_STD_LAPS
 
 # Energy
 KWH_MJ = 3.6
-KWH_KJ = 3600
+KWH_KJ = KWH_MJ * 1000
+KWH_J = KWH_KJ * 1000
 
 # Fuels and Energy
 # LHV = MJ/kg

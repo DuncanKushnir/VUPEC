@@ -4,6 +4,49 @@ locations in the drive train
 """
 
 
+def source_energy(global_params, vehicle, model_df):
+    """
+    Determines where the energy to drive the wheel will come from
+    """
+    wheel_energy_required_mask = model_df["energy_wheel"] > 0
+    energy_wheel = model_df.loc[wheel_energy_required_mask, "energy_wheel"]
+
+    if not vehicle.battery:
+        pass
+
+    return model_df
+
+
+def sink_energy(global_params, vehicle, model_df):
+    """
+    Determines how the excess wheel energy will be sunk
+    """
+    wheel_energy_required_mask = model_df["energy_wheel"] < 0
+    energy_wheel = model_df.loc[wheel_energy_required_mask, "energy_wheel"]
+
+    if not vehicle.battery:
+        pass
+
+    else:
+        # In this case, we are dealing with a vehicle that can not regen brake
+        pass
+
+    # Now that we know the true demand on the brakes, we apply it.
+    model_df["loss_friction_brake"] = energy_wheel  * -1
+    return model_df
+
+
+def idle(global_params, vehicle, model_df):
+    """
+    Determines idling behaviour
+    """
+    wheel_energy_required_mask = model_df["energy_wheel"] == 0
+    energy_wheel = model_df.loc[wheel_energy_required_mask, "energy_wheel"]
+    if vehicle:
+        pass
+
+    return model_df
+
 def from_wheels_to_driveshaft(global_params, vehicle, model_df):
     model_df["torque_driveshaft"] = (
         model_df["torque_wheel"] / vehicle.drivetrain.final_ratio
@@ -23,10 +66,18 @@ def from_driveshaft_to_engine(global_params, vehicle, model_df):
 
 
 def allocate_demands(global_params, vehicle, model_df):
-    wheel_energy_required = model_df[model_df["energy_wheel"] > 0]
-    wheel_energy_available = model_df[model_df["energy_wheel"] < 0]
-    wheel_energy_zero = model_df[model_df["energy_wheel"] == 0]
+    """
+    Determines the direction and magnitude of component energy flows
+    """
+    # First, we need to know if the engine is already loaded, e.g. driving the
+    # alternator, running belt driven pumps, etc. This will be handled in the
+    # pipeline with the accessory_demand function.
 
+    model_df = source_energy(global_params, vehicle, model_df)
+    model_df = sink_energy(global_params, vehicle, model_df)
+    model_df = idle(global_params, vehicle, model_df)
+
+    # The previous three functions operate on slices of model_df
     model_df = from_wheels_to_driveshaft(global_params, vehicle, model_df)
     model_df = from_driveshaft_to_engine(global_params, vehicle, model_df)
     model_df = allocate_torque(global_params, vehicle, model_df)

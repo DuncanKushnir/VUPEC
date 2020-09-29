@@ -33,7 +33,10 @@ def initialize_vehicle(manufacturer, model, year):
     vehicle = data["vehicles"].get(PRESET_MOD[model], None)
     if vehicle is None:
         raise KeyError(f"{model} not found in vehicle models")
-    return ObjDict.wrap_dict(vehicle.copy())
+    vehicle = ObjDict.wrap_dict(vehicle.copy())
+    if 'battery' in vehicle:
+        pass
+    return vehicle
 
 
 def initialize_drivecycle(name):

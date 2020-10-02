@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <meta charset="utf-8"/>
+    <title>VUPEC</title>
+    <meta name="theme-color" content="#5eb9d7"/>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+
+<header>
+    <div class="contentheader">
+    <div class="title_area">
+        <h2 id="main_title">VUPEC: Vehicle Use Phase Energy Calculator</h2>
+    </div>
+    </div>
+</header>
+
+<!-- Fixed size after header-->
+<div class="content">
+    <!-- Always on top. Fixed position, fixed width, relative to content width-->
+    <div class="sidebar_left">
+        <div class="leftwrapper">
+            {% block setup_form %}{% endblock %}
+        </div>
+    </div>
+    <div class="sidebar_right">
+        <div class="rightwrapper">
+            {% block result_form %}{% endblock %}
+        </div>
+    </div>
+    <!-- Scrollable div with main content -->
+
+    <div class="scrollable_parameters">
+    <div class="generic_spacing">
+        <div class="formwrapper">
+            {% block vehicle_parameter_form %}{% endblock %}
+        </div>
+
+    </div>
+    <div class="generic_spacing">
+        <div class="formwrapper">
+            {% block drivetrain_parameter_form %}{% endblock %}
+        </div>
+        </div>
+        this shit can be scrolled indefinitely</br>
+        this shit can be scrolled indefinitely</br>
+        this shit can be scrolled indefinitely</br>
+        this shit can be scrolled indefinitely</br>
+        this shit can be scrolled indefinitely</br>
+        this shit can be scrolled indefinitely</br>
+        this shit can be scrolled indefinitely</br>
+        this shit can be scrolled indefinitely</br>
+        this shit can be scrolled indefinitely</br>
+        this shit can be scrolled indefinitely</br>
+        this shit can be scrolled indefinitely</br>
+        this shit can be scrolled indefinitely</br>
+        this shit can be scrolled indefinitely</br>
+        this shit can be scrolled indefinitely</br>
+        this shit can be scrolled indefinitely</br>
+        this shit can be scrolled indefinitely</br>
+        this shit can be scrolled indefinitely</br>
+        this shit can be scrolled indefinitely</br>
+        this shit can be scrolled indefinitely</br>
+        this shit can be scrolled indefinitely</br>
+        this shit can be scrolled indefinitely</br>
+        this shit can be scrolled indefinitely</br>
+        this shit can be scrolled indefinitely</br>
+        this shit can be scrolled indefinitely</br>
+        this shit can be scrolled indefinitely</br>
+        this shit can be scrolled indefinitely</br>
+    </div>
+    </div>
+
+
+</div>
+
+<footer>
+    <div class="contentfooter">
+    <div class="generic_area">
+        <h2 id="footer_text">Funded by  <a href="http://www.energimyndigheten.se/" target="_blank">
+        EnergiMyndigheten </a> as part of ERA-NET cofunding for EU HORIZON 2020.</h2>
+    </div>
+    </div>
+</footer>
+</body>
+</html>
+
+
+
+
+<script>
+    let manufacturer_select = document.getElementById('manufacturer');
+    let model_select = document.getElementById('model');
+
+    manufacturer_select.onchange = function () {
+        let manufacturer = manufacturer_select.value;
+
+        fetch('/data/models_by_manufacturer/' + manufacturer).then(function(response) {
+            response.json().then(function(data) {
+                console.table(data);
+                let option_html = '';
+                for (let model of data) {
+                    option_html += '<option value="' + model.id + '">' + model.id + '</option>';
+                }
+                model_select.innerHTML = option_html;
+            });
+
+        });
+    }
+</script>

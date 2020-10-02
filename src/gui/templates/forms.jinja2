@@ -1,0 +1,70 @@
+{% extends 'layout.jinja2' %}
+
+
+{% block setup_form %}
+    <h2 class="areatitle">Calculation Setup</h2>
+    <h3 class="subtitle">Base Vehicle</h3>
+    <form method="POST" action="/vehicle" id="setup_form">
+        {{ setup_form.csrf_token }}
+        <div class="form-field">{{ setup_form.manufacturer.label }} {{ setup_form.manufacturer }}
+            {% if setup_form.manufacturer.errors %}
+                <ul class="errors">
+                    {% for error in setup_form.manufacturer.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </div>
+        <div class="form-field">{{ setup_form.model.label }} {{ setup_form.model }}
+            {% if setup_form.model.errors %}
+                <ul class="errors">
+                    {% for error in setup_form.password.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </div>
+        <h3 class="subtitle">Drive Cycle</h3>
+        <div class="form-field">{{ setup_form.drivecycle.label }} {{ setup_form.drivecycle }}
+        </div>
+
+    </form>
+
+{% endblock %}
+
+{% block vehicle_parameter_form %}
+    <h2 class="areatitle">Parameters</h2>
+    {{ setup_form.csrf_token }}
+    <div class="form-field">{{ setup_form.manufacturer.label }} {{ setup_form.manufacturer }}
+    </div>
+    <div class="form-field">{{ setup_form.model.label }} {{ setup_form.model }}
+    </div>
+    <h3 class="subtitle">Drive Cycle</h3>
+    <div class="form-field">{{ setup_form.drivecycle.label }} {{ setup_form.drivecycle }}
+    </div>
+    </form>
+
+{% endblock %}
+
+{% block drivetrain_parameter_form %}
+    <h2 class="areatitle">Parameters</h2>
+    <div class="form-field">{{ setup_form.manufacturer.label }} {{ setup_form.manufacturer }}
+    </div>
+    <div class="form-field">{{ setup_form.model.label }} {{ setup_form.model }}
+    </div>
+    <h3 class="subtitle">Drive Cycle</h3>
+    <div class="form-field">{{ setup_form.drivecycle.label }} {{ setup_form.drivecycle }}
+    </div>
+    </form>
+
+{% endblock %}
+
+{% block result_form %}
+    <h2 class="areatitle">Result</h2>
+    <form method="POST" action="/export" id="result_form">
+        There's gonna be graphs here! </br>
+        {{ result_form.submit_ab }}
+        {{ result_form.submit_sens }}
+    </form>
+
+{% endblock %}

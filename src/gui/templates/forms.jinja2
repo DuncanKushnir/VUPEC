@@ -32,28 +32,22 @@
 
 {% endblock %}
 
-{% block vehicle_parameter_form %}
-    <h2 class="areatitle">Parameters</h2>
-    {{ setup_form.csrf_token }}
-    <div class="form-field">{{ setup_form.manufacturer.label }} {{ setup_form.manufacturer }}
+{% block physical_form %}
+    <h2 class="areatitle">Physical</h2>
+    <div class="form-field">{{ physical_form.mass.label }} {{ physical_form.mass }}
     </div>
-    <div class="form-field">{{ setup_form.model.label }} {{ setup_form.model }}
+    <div class="form-field">{{ physical_form.coeff_drag.label }} {{ physical_form.coeff_drag }}
     </div>
-    <h3 class="subtitle">Drive Cycle</h3>
-    <div class="form-field">{{ setup_form.drivecycle.label }} {{ setup_form.drivecycle }}
+    <div class="form-field">{{ physical_form.cross_section.label }} {{ physical_form
+    .cross_section }}
     </div>
     </form>
 
 {% endblock %}
 
-{% block drivetrain_parameter_form %}
-    <h2 class="areatitle">Parameters</h2>
-    <div class="form-field">{{ setup_form.manufacturer.label }} {{ setup_form.manufacturer }}
-    </div>
-    <div class="form-field">{{ setup_form.model.label }} {{ setup_form.model }}
-    </div>
-    <h3 class="subtitle">Drive Cycle</h3>
-    <div class="form-field">{{ setup_form.drivecycle.label }} {{ setup_form.drivecycle }}
+{% block drivetrain_form %}
+    <h2 class="areatitle">Drivetrain</h2>
+    <div class="form-field">{{ drivetrain_form.fuel.label }} {{ drivetrain_form.fuel }}
     </div>
     </form>
 

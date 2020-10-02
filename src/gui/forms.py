@@ -27,9 +27,13 @@ class SetupForm(FlaskForm):
     submit = SubmitField("Output")
 
 
-class DataForm(FlaskForm):
+class PhysicalForm(FlaskForm):
     mass = FloatField("Vehicle Mass", [DataRequired()], id="mass")
+    coeff_drag = FloatField("Drag Coefficient", [DataRequired()], id="coeff_drag")
+    cross_section = FloatField("Cross Section", [DataRequired()], id="cross_section")
 
+class DrivetrainForm(FlaskForm):
+    fuel = FloatField("Fuel Type", [DataRequired()], id="fuel")
 
 class ResultForm(FlaskForm):
     submit_ab = SubmitField("Export as an A/B comparison")

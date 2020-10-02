@@ -32,7 +32,7 @@ def sink_energy(global_params, vehicle, model_df):
         pass
 
     # Now that we know the true demand on the brakes, we apply it.
-    model_df["loss_friction_brake"] = energy_wheel  * -1
+    model_df["loss_friction_brake"] = energy_wheel * -1
     return model_df
 
 
@@ -46,6 +46,7 @@ def idle(global_params, vehicle, model_df):
         pass
 
     return model_df
+
 
 def from_wheels_to_driveshaft(global_params, vehicle, model_df):
     model_df["torque_driveshaft"] = (

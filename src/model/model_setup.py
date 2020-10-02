@@ -34,7 +34,7 @@ def initialize_vehicle(manufacturer, model, year):
     if vehicle is None:
         raise KeyError(f"{model} not found in vehicle models")
     vehicle = ObjDict.wrap_dict(vehicle.copy())
-    if 'battery' in vehicle:
+    if "battery" in vehicle:
         pass
     return vehicle
 

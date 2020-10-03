@@ -29,7 +29,11 @@ class DriveCycle:
     def __iter__(self):
         yield from self.segments
 
-    def to_df(self, integration_resolution=1):
+    def resample(self, duration=1.0):
+        for seg in self.segments:
+            yield from seg.resample(duration=duration)
+
+    def to_df(self, integration_resolution=1.0):
         """
         Converts the drive cycle into a dataframe
         :param integration_resolution: the time resolution for integrating curved
@@ -38,10 +42,9 @@ class DriveCycle:
         """
         total_t = 0.0
         data = []
-        for seg in self.segments:
+        for seg in self.resample(duration=integration_resolution):
             data.append(
                 (
-                    seg.index,
                     total_t,
                     seg.duration,
                     seg.type,
@@ -58,7 +61,6 @@ class DriveCycle:
         result = pd.DataFrame(
             data,
             columns=[
-                "segment_id",
                 "start_time",
                 "duration",
                 "segment_type",
@@ -151,6 +153,28 @@ class DriveCycleSegment:
 
         self.metadata = metadata
 
+    def resample(self, duration):
+        """
+        :param duration: float in seconds to resample the drive cycle
+        :return: a generator yielding one sub drive cycle for each duration in the
+        parent
+        """
+        # If the sample frequency is the same as this segment, simply yield ourself.
+        if float(duration) == float(self.duration):
+            yield self
+        else:
+            n_samples = int(self.duration / duration)
+            for subsample_idx in range(n_samples):
+                v_increment = (self.end_v - self.start_v) / n_samples
+                a_increment = (self.end_alt - self.start_alt) / n_samples
+                yield DriveCycleSegment(
+                    duration,
+                    self.start_v + v_increment * subsample_idx,
+                    self.start_v + v_increment * (subsample_idx + 1),
+                    self.start_alt + a_increment * subsample_idx,
+                    self.start_alt + a_increment * (subsample_idx + 1),
+                )
+
     @property
     def delta_v(self):
         return self.end_v - self.start_v
@@ -239,7 +263,6 @@ class DriveCycleParser(LineParserBase):
             new_segment = DriveCycleSegment(
                 seg_t, self.last_v, new_v, self.last_a, new_a
             )
-            new_segment.index = self.index
             self.result[-1].segments.append(new_segment)
             self.last_v = new_v
             self.last_t += seg_t

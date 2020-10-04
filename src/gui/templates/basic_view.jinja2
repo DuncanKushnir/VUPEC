@@ -1,0 +1,60 @@
+{% extends 'layout.jinja2' %}
+
+
+{% block setup_subform %}
+    <h2 class="areatitle">Calculation Setup</h2>
+    <h3 class="subtitle">Base Vehicle</h3>
+    {{ setup_form.csrf_token }}
+    <div class="form-field">{{ setup_form.manufacturer.label }} {{ setup_form.manufacturer }}
+        {% if setup_form.manufacturer.errors %}
+            <ul class="errors">
+                {% for error in setup_form.manufacturer.errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
+    <div class="form-field">{{ setup_form.model.label }} {{ setup_form.model }}
+        {% if setup_form.model.errors %}
+            <ul class="errors">
+                {% for error in setup_form.password.errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
+    <h3 class="subtitle">Drive Cycle</h3>
+    <div class="form-field">{{ setup_form.drivecycle.label }} {{ setup_form.drivecycle }}
+    </div>
+    <div class="auto-resize-landscape">
+            <img id='dc_image' src={{ url_for('static', filename=('dcplot.png'))}}>
+    </div>
+{% endblock %}
+
+{% block physical_subform %}
+    <h2 class="areatitle">Physical</h2>
+    <div class="form-field">{{ physical_form.mass.label }} {{ physical_form.mass }}
+    </div>
+    <div class="form-field">{{ physical_form.coeff_drag.label }} {{ physical_form.coeff_drag }}
+    </div>
+    <div class="form-field">{{ physical_form.cross_section.label }} {{ physical_form
+    .cross_section }}
+    <div class="form-field">{{ physical_form.coeff_rr.label }} {{ physical_form
+    .coeff_rr }}
+    </div>
+{% endblock %}
+
+{% block drivetrain_subform %}
+    <h2 class="areatitle">Drivetrain</h2>
+    <div class="form-field">{{ drivetrain_form.fuel.label }} {{ drivetrain_form.fuel }}
+    </div>
+{% endblock %}
+
+{% block result_subform %}
+    <h2 class="areatitle">Result</h2>
+        <h3 class="subtitle">Drive Cycle</h3>
+        <div class="generic_bottom">
+            {{ result_form.submit_ab }}
+            {{ result_form.submit_sens }}
+        </div>
+{% endblock %}

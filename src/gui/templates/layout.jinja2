@@ -20,63 +20,67 @@
 </header>
 
 <!-- Fixed size after header-->
+<form method="POST" action="/submit" id="parameter_form">
 <div class="content">
     <!-- Always on top. Fixed position, fixed width, relative to content width-->
     <div class="sidebar_left">
         <div class="leftwrapper">
-            {% block setup_form %}{% endblock %}
+            {% block setup_subform %}{% endblock %}
         </div>
     </div>
     <div class="sidebar_right">
         <div class="rightwrapper">
-            {% block result_form %}{% endblock %}
+            {% block result_subform %}{% endblock %}
         </div>
     </div>
+
     <!-- Scrollable div with main content -->
-
     <div class="scrollable_parameters">
-    <div class="generic_spacing">
-        <div class="form_wrapper">
-            {% block physical_form %}{% endblock %}
+
+        <div class="generic_spacing">
+            <div class="form_wrapper">
+                {% block physical_subform %}{% endblock %}
+            </div>
         </div>
 
-    </div>
-    <div class="generic_spacing">
-        <div class="form_wrapper">
-            {% block drivetrain_form %}{% endblock %}
+        <div class="generic_spacing">
+            <div class="form_wrapper">
+                {% block drivetrain_subform %}{% endblock %}
+            </div>
         </div>
+
+        <div class="generic_spacing">
+        this shit can be scrolled indefinitely</br>
+        this shit can be scrolled indefinitely</br>
+        this shit can be scrolled indefinitely</br>
+        this shit can be scrolled indefinitely</br>
+        this shit can be scrolled indefinitely</br>
+        this shit can be scrolled indefinitely</br>
+        this shit can be scrolled indefinitely</br>
+        this shit can be scrolled indefinitely</br>
+        this shit can be scrolled indefinitely</br>
+        this shit can be scrolled indefinitely</br>
+        this shit can be scrolled indefinitely</br>
+        this shit can be scrolled indefinitely</br>
+        this shit can be scrolled indefinitely</br>
+        this shit can be scrolled indefinitely</br>
+        this shit can be scrolled indefinitely</br>
+        this shit can be scrolled indefinitely</br>
+        this shit can be scrolled indefinitely</br>
+        this shit can be scrolled indefinitely</br>
+        this shit can be scrolled indefinitely</br>
+        this shit can be scrolled indefinitely</br>
+        this shit can be scrolled indefinitely</br>
+        this shit can be scrolled indefinitely</br>
+        this shit can be scrolled indefinitely</br>
+        this shit can be scrolled indefinitely</br>
+        this shit can be scrolled indefinitely</br>
+        this shit can be scrolled indefinitely</br>
         </div>
-        this shit can be scrolled indefinitely</br>
-        this shit can be scrolled indefinitely</br>
-        this shit can be scrolled indefinitely</br>
-        this shit can be scrolled indefinitely</br>
-        this shit can be scrolled indefinitely</br>
-        this shit can be scrolled indefinitely</br>
-        this shit can be scrolled indefinitely</br>
-        this shit can be scrolled indefinitely</br>
-        this shit can be scrolled indefinitely</br>
-        this shit can be scrolled indefinitely</br>
-        this shit can be scrolled indefinitely</br>
-        this shit can be scrolled indefinitely</br>
-        this shit can be scrolled indefinitely</br>
-        this shit can be scrolled indefinitely</br>
-        this shit can be scrolled indefinitely</br>
-        this shit can be scrolled indefinitely</br>
-        this shit can be scrolled indefinitely</br>
-        this shit can be scrolled indefinitely</br>
-        this shit can be scrolled indefinitely</br>
-        this shit can be scrolled indefinitely</br>
-        this shit can be scrolled indefinitely</br>
-        this shit can be scrolled indefinitely</br>
-        this shit can be scrolled indefinitely</br>
-        this shit can be scrolled indefinitely</br>
-        this shit can be scrolled indefinitely</br>
-        this shit can be scrolled indefinitely</br>
     </div>
-    </div>
-
-
 </div>
+</form>
+
 
 <footer>
     <div class="contentfooter">
@@ -86,11 +90,10 @@
     </div>
     </div>
 </footer>
+
 </body>
+
 </html>
-
-
-
 
 <script>
     let manufacturer_select = document.getElementById('manufacturer');

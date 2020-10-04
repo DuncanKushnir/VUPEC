@@ -2,6 +2,7 @@
 Calculates the energy requirement for driving
 """
 import pandas as pd
+import os
 
 from model.vehicle import setup_vehicle, add_idle_behaviour
 from model.physics import add_external_physics
@@ -11,6 +12,8 @@ from model.battery import process_battery_demand
 from model.motors import apply_motor_efficiencies
 from model.labels import OUTPUT_DF_DESC
 from model.constants import *
+
+
 
 STANDARD_PIPELINE = [
     add_external_physics,
@@ -103,7 +106,11 @@ if __name__ == "__main__":
     }
 
     drive_cycle = data["drive_cycles"]["nedc"]
-    drive_cycle = drive_cycle.to_df()
+    dc = drive_cycle.to_df()
+
+
+    drive_cycle = dc
+
     model = run_model(parameters, vehicle, drive_cycle)
     # print(model.head())
     print(model["loss_rolling"].sum(), "J lost to rolling resistance")

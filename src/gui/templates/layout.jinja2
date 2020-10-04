@@ -14,7 +14,7 @@
 <header>
     <div class="contentheader">
     <div class="title_area">
-        <h2 id="main_title">VUPEC: Vehicle Use Phase Energy Calculator</h2>
+        <h2 id="main_title">VUPEC: Vehicle Use Phase Energy Calculator - Basic Interface</h2>
     </div>
     </div>
 </header>
@@ -95,6 +95,7 @@
 <script>
     let manufacturer_select = document.getElementById('manufacturer');
     let model_select = document.getElementById('model');
+    let drivecycle_select = document.getElementById('drivecycle');
 
     manufacturer_select.onchange = function () {
         let manufacturer = manufacturer_select.value;
@@ -109,6 +110,21 @@
                 model_select.innerHTML = option_html;
             });
 
+        });
+    };
+
+    function changeImage(a) {
+        document.getElementById("dc_image").src=a;
+    }
+
+    drivecycle_select.onchange = function () {
+        let drivecycle = drivecycle_select.value;
+        console.log(drivecycle);
+        fetch('/data/dc/' + drivecycle).then(function(response) {
+            response.json().then(function (data) {
+                console.log(data);
+                changeImage(data.src);
+            });
         });
     }
 </script>

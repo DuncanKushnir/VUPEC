@@ -27,6 +27,9 @@
         <h3 class="subtitle">Drive Cycle</h3>
         <div class="form-field">{{ setup_form.drivecycle.label }} {{ setup_form.drivecycle }}
         </div>
+        <div class="auto-resize-landscape">
+                <img id='dc_image' src={{ url_for('static', filename=('dcplot.png'))}}>
+        </div>
 
     </form>
 
@@ -56,9 +59,11 @@
 {% block result_form %}
     <h2 class="areatitle">Result</h2>
     <form method="POST" action="/export" id="result_form">
-        There's gonna be graphs here! </br>
-        {{ result_form.submit_ab }}
-        {{ result_form.submit_sens }}
+        <h3 class="subtitle">Drive Cycle</h3>
+        <div class="generic_bottom">
+            {{ result_form.submit_ab }}
+            {{ result_form.submit_sens }}
+        </div>
     </form>
 
 {% endblock %}

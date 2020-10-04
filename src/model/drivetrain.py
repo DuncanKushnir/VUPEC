@@ -4,6 +4,7 @@ locations in the drive train
 """
 
 
+
 def source_energy(global_params, vehicle, model_df):
     """
     Determines where the energy to drive the wheel will come from
@@ -50,7 +51,8 @@ def idle(global_params, vehicle, model_df):
 
 def from_wheels_to_driveshaft(global_params, vehicle, model_df):
     model_df["torque_driveshaft"] = (
-        model_df["torque_wheel"] / vehicle.drivetrain.final_ratio
+        model_df["torque_wheel"] * vehicle.drivetrain.drive_n /
+        vehicle.drivetrain.final_ratio
     )
     model_df["power_driveshaft"] = model_df["power_wheel"] / vehicle.drivetrain.eff_diff
     model_df["omega_driveshaft"] = model_df["omega_wheel"] / vehicle.drivetrain.eff_diff

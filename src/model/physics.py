@@ -169,6 +169,6 @@ def add_external_physics(global_params, vehicle, model_df):
     model_df["power_wheel"] = model_df["energy_wheel"] / model_df["duration"]
     model_df["force_wheel"] = model_df["power_wheel"] / model_df["delta_d"]
     model_df["omega_wheel"] = model_df["avg_v"] / vehicle.tires.radius
-    model_df["torque_wheel"] = model_df["power_wheel"] / model_df["omega_wheel"]
+    model_df["torque_wheel"] = model_df["power_wheel"] / ( model_df["omega_wheel"] * 4)
 
     return model_df

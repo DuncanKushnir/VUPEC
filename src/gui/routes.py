@@ -41,3 +41,8 @@ def success():
 @app.route("/export")
 def export():
     pass
+
+@app.after_request
+def add_header(response):
+    response.headers['Cache-Control'] = 'public, max-age=0'
+    return response

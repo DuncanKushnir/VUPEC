@@ -14,7 +14,6 @@ from model.labels import OUTPUT_DF_DESC
 from model.constants import *
 
 
-
 STANDARD_PIPELINE = [
     add_external_physics,
     add_accessory_demands,
@@ -107,7 +106,6 @@ if __name__ == "__main__":
 
     drive_cycle = data["drive_cycles"]["nedc"]
     dc = drive_cycle.to_df()
-
 
     drive_cycle = dc
 

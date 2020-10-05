@@ -50,32 +50,34 @@
         </div>
 
         <div class="generic_spacing">
-        this shit can be scrolled indefinitely</br>
-        this shit can be scrolled indefinitely</br>
-        this shit can be scrolled indefinitely</br>
-        this shit can be scrolled indefinitely</br>
-        this shit can be scrolled indefinitely</br>
-        this shit can be scrolled indefinitely</br>
-        this shit can be scrolled indefinitely</br>
-        this shit can be scrolled indefinitely</br>
-        this shit can be scrolled indefinitely</br>
-        this shit can be scrolled indefinitely</br>
-        this shit can be scrolled indefinitely</br>
-        this shit can be scrolled indefinitely</br>
-        this shit can be scrolled indefinitely</br>
-        this shit can be scrolled indefinitely</br>
-        this shit can be scrolled indefinitely</br>
-        this shit can be scrolled indefinitely</br>
-        this shit can be scrolled indefinitely</br>
-        this shit can be scrolled indefinitely</br>
-        this shit can be scrolled indefinitely</br>
-        this shit can be scrolled indefinitely</br>
-        this shit can be scrolled indefinitely</br>
-        this shit can be scrolled indefinitely</br>
-        this shit can be scrolled indefinitely</br>
-        this shit can be scrolled indefinitely</br>
-        this shit can be scrolled indefinitely</br>
-        this shit can be scrolled indefinitely</br>
+            <div class="form_wrapper">
+                this shit can be scrolled indefinitely</br>
+                this shit can be scrolled indefinitely</br>
+                this shit can be scrolled indefinitely</br>
+                this shit can be scrolled indefinitely</br>
+                this shit can be scrolled indefinitely</br>
+                this shit can be scrolled indefinitely</br>
+                this shit can be scrolled indefinitely</br>
+                this shit can be scrolled indefinitely</br>
+                this shit can be scrolled indefinitely</br>
+                this shit can be scrolled indefinitely</br>
+                this shit can be scrolled indefinitely</br>
+                this shit can be scrolled indefinitely</br>
+                this shit can be scrolled indefinitely</br>
+                this shit can be scrolled indefinitely</br>
+                this shit can be scrolled indefinitely</br>
+                this shit can be scrolled indefinitely</br>
+                this shit can be scrolled indefinitely</br>
+                this shit can be scrolled indefinitely</br>
+                this shit can be scrolled indefinitely</br>
+                this shit can be scrolled indefinitely</br>
+                this shit can be scrolled indefinitely</br>
+                this shit can be scrolled indefinitely</br>
+                this shit can be scrolled indefinitely</br>
+                this shit can be scrolled indefinitely</br>
+                this shit can be scrolled indefinitely</br>
+                this shit can be scrolled indefinitely</br>
+            </div>
         </div>
     </div>
 </div>
@@ -96,13 +98,14 @@
 </html>
 
 <script>
+    // Global access to elements
     let manufacturer_select = document.getElementById('manufacturer');
     let model_select = document.getElementById('model');
     let drivecycle_select = document.getElementById('drivecycle');
 
-    manufacturer_select.onchange = function () {
+    // Do stuff
+    function lookup_models() {
         let manufacturer = manufacturer_select.value;
-
         fetch('/data/models_by_manufacturer/' + manufacturer).then(function(response) {
             response.json().then(function(data) {
                 console.table(data);
@@ -114,20 +117,26 @@
             });
 
         });
-    };
-
-    function changeImage(a) {
-        document.getElementById("dc_image").src=a;
     }
 
-    drivecycle_select.onchange = function () {
+    function change_drivecycle_image() {
         let drivecycle = drivecycle_select.value;
-        console.log(drivecycle);
         fetch('/data/dc/' + drivecycle).then(function(response) {
             response.json().then(function (data) {
-                console.log(data);
-                changeImage(data.src);
+                document.getElementById("dc_image").src=data.src;
             });
         });
+
     }
+
+    // State change triggers
+    drivecycle_select.onchange = change_drivecycle_image;
+    manufacturer_select.onchange = lookup_models;
+
+    window.onload = function () {
+        lookup_models();
+        change_drivecycle_image();
+    };
+
+
 </script>

@@ -2,10 +2,12 @@
 
 
 {% block setup_subform %}
+    {{ setup_form.csrf_token }}
     <h2 class="areatitle">Calculation Setup</h2>
     <h3 class="subtitle">Base Vehicle</h3>
-    {{ setup_form.csrf_token }}
-    <div class="form-field">{{ setup_form.manufacturer.label }} {{ setup_form.manufacturer }}
+    <p></p>
+    <div class="form-field">
+        {{ setup_form.manufacturer.label }}   {{ setup_form.manufacturer }}
         {% if setup_form.manufacturer.errors %}
             <ul class="errors">
                 {% for error in setup_form.manufacturer.errors %}
@@ -14,7 +16,9 @@
             </ul>
         {% endif %}
     </div>
-    <div class="form-field">{{ setup_form.model.label }} {{ setup_form.model }}
+    <p></p>
+    <div class="form-field">
+        {{ setup_form.model.label }} {{ setup_form.model }}
         {% if setup_form.model.errors %}
             <ul class="errors">
                 {% for error in setup_form.password.errors %}
@@ -23,24 +27,53 @@
             </ul>
         {% endif %}
     </div>
+    <p></p>
     <h3 class="subtitle">Drive Cycle</h3>
-    <div class="form-field">{{ setup_form.drivecycle.label }} {{ setup_form.drivecycle }}
+    <p></p>
+    <div class="form-field">
+        {{ setup_form.drivecycle.label }} {{ setup_form.drivecycle }}
     </div>
     <div class="auto-resize-landscape">
-            <img id='dc_image' src={{ url_for('static', filename=('dcplot.png'))}}>
+            <img id='dc_image'>
     </div>
 {% endblock %}
 
 {% block physical_subform %}
     <h2 class="areatitle">Physical</h2>
-    <div class="form-field">{{ physical_form.mass.label }} {{ physical_form.mass }}
+    <div class="form-field">
+        <div class="col1"><h3 class="subtitle">Parameter</h3></div>
+        <div class="col2"><h3 class="subtitle">Base Value</h3></div>
+        <div class="col3"><h3 class="subtitle">Unit</h3></div>
+        <div class="col4"><h3 class="subtitle-r">Set Value</h3></div>
+
     </div>
-    <div class="form-field">{{ physical_form.coeff_drag.label }} {{ physical_form.coeff_drag }}
+    <p></p>
+    <div class="form-field">
+        <div class="col1">{{ physical_form.mass.label }}</div>
+        <div class="col2" id="mass_base">{{ physical_form.mass_base }}</div>
+        <div class="col3" id="mass_unit">{{ physical_form.mass_unit }}</div>
+        <div class="col4">{{ physical_form.mass }}</div>
     </div>
-    <div class="form-field">{{ physical_form.cross_section.label }} {{ physical_form
-    .cross_section }}
-    <div class="form-field">{{ physical_form.coeff_rr.label }} {{ physical_form
-    .coeff_rr }}
+    <p></p>
+    <div class="form-field">
+        <div class="col1">{{ physical_form.coeff_drag.label }}</div>
+        <div class="col2" id="coeff_drag_base">{{ physical_form.coeff_drag_base }}</div>
+        <div class="col3" id="coeff_drag_unit">{{ physical_form.coeff_drag_unit }}</div>
+        <div class="col4">{{ physical_form.coeff_drag }}</div>
+    </div>
+    <p></p>
+    <div class="form-field">
+        <div class="col1">{{ physical_form.cross_section.label }}</div>
+        <div class="col2" id="cross_section_base">{{ physical_form.cross_section_base }}</div>
+        <div class="col3" id="cross_section_unit">{{ physical_form.cross_section_unit }}</div>
+        <div class="col4">{{ physical_form.cross_section }}</div>
+    </div>
+    <p></p>
+    <div class="form-field">
+        <div class="col1">{{ physical_form.coeff_rr.label }}</div>
+        <div class="col2" id="coeff_rr">{{ physical_form.coeff_rr_base }}</div>
+        <div class="col3" id="coeff_rr_unit">{{ physical_form.coeff_rr_unit }}</div>
+        <div class="col4">{{ physical_form.coeff_rr }}</div>
     </div>
 {% endblock %}
 

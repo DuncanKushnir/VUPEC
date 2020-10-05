@@ -1,0 +1,7 @@
+# WLTP Driving cycles
+
+name wltp-3b
+include wltc_low_3
+include wltc_medium_3-2
+include wltc_high_3-2
+include wltc_extra_high_3

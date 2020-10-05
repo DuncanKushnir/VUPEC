@@ -106,36 +106,84 @@
     // Do stuff
     function lookup_models() {
         let manufacturer = manufacturer_select.value;
-        fetch('/data/models_by_manufacturer/' + manufacturer).then(function(response) {
-            response.json().then(function(data) {
-                console.table(data);
-                let option_html = '';
-                for (let model of data) {
-                    option_html += '<option value="' + model.id + '">' + model.id + '</option>';
-                }
-                model_select.innerHTML = option_html;
-            });
+        fetch('/data/models_by_manufacturer/' + manufacturer)
+            .then(function(response) {
+                response.json()
+                    .then(function(data) {
+                        let option_html = '';
+                        for (let model of data) {
+                            option_html += '<option value="' + model.id + '">' + model.id + '</option>';
+                        }
+                        model_select.innerHTML = option_html;
+                    });
 
-        });
+            });
     }
 
     function change_drivecycle_image() {
         let drivecycle = drivecycle_select.value;
-        fetch('/data/dc/' + drivecycle).then(function(response) {
-            response.json().then(function (data) {
-                document.getElementById("dc_image").src=data.src;
+        fetch('/data/dc/' + drivecycle)
+            .then(function(response) {
+                response.json()
+                    .then(function (data) {
+                        document.getElementById("dc_image").src=data.src;
+                    });
             });
-        });
+    }
 
+    function fill_base_values(){
+        let manufacturer = manufacturer_select.value;
+        let model = model_select.value;
+        let drivecycle = drivecycle_select.value;
+        fetch('/data/getbase/' + manufacturer + '/' + model + '/' + drivecycle)
+            .then(function(response) {
+                response.json()
+                    .then(function (data) {
+                        // Fill from database
+                        for (var key in data.data) {
+                            if (data.data.hasOwnProperty(key)) {
+                                let element = document.getElementById(key);
+                                //console.log(key+': '+data.data[key]);
+                                if (element!=null) {
+                                    element.innerHTML = data.data[key];
+                                }
+
+                            }
+                        }
+                        // clear set values
+                        for (var key in data.orig) {
+                            if (data.orig.hasOwnProperty(key)) {
+                                let element = document.getElementById(key);
+                                //console.log(key + ': ' + data.orig[key]);
+                                if (element != null) {
+                                    element.value = '';
+                                }
+
+                            }
+                        }
+                    })
+            });
     }
 
     // State change triggers
-    drivecycle_select.onchange = change_drivecycle_image;
-    manufacturer_select.onchange = lookup_models;
+    drivecycle_select.onchange = function () {
+        change_drivecycle_image();
+        fill_base_values();
+    };
+
+    manufacturer_select.onchange = function () {
+        lookup_models();
+        fill_base_values();
+    };
+
+    model_select.onchange = function () {
+        fill_base_values();
+    };
 
     window.onload = function () {
         lookup_models();
         change_drivecycle_image();
+        fill_base_values();
     };
 
 

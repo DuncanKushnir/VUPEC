@@ -9,6 +9,20 @@ from util.locations import GUI_STATIC_DIR
 def get_manufacturer_list():
     return ["generic", "volvo"]
 
+def setup_model(manufacturer, model, drivecycle):
+    state.MANUFACTURER = manufacturer
+    state.MODEL = model
+    state.DRIVE_CYCLE = drivecycle
+    if manufacturer == 'generic':
+        return {'data': {'mass' : 1644,
+                         'coeff_drag': 0.3,
+                         'cross_section': 2.5,
+                         'coeff_rr': 0.100}}
+    return {'data': {'mass': 1344,
+                     'coeff_drag': 0.32,
+                     'cross_section': 2.7,
+                     'coeff_rr': 0.090}}
+
 
 def get_model_list(manufacturer):
     if manufacturer == "generic":

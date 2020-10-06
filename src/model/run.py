@@ -18,8 +18,9 @@ def extract_efficiencies(model_df, drive_cycle):
     petrol_economy = (
             model_df["input_petrol"].sum() * 100 * 1000 / drive_cycle.delta_d.sum()
     )
+    petrol_economy = '{:g}'.format(float('{:.{p}g}'.format(petrol_economy*1.2, p=2)))
     return {'result': {"ff_consumption": petrol_economy,
-                       "fossil_fuel": 'petrol',
+                       "fossil_fuel": 'Petrol',
                        "electric_economy": 0}}
 
 def run(global_parameters, vehicles, drive_cycle):

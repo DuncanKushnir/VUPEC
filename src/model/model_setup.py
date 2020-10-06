@@ -58,7 +58,7 @@ def basic_setup_from_web_api(submitted_dict):
         vehicle_b = setup_scenario_vehicle(base_vehicle, submitted_dict)
         return_vehicles.append(vehicle_b)
 
-    return global_parameters, return_vehicles, drive_cycle
+    return state.GLOBAL_PARAMS, return_vehicles, state.DRIVE_CYCLE
 
 def setup_scenario_vehicle(base_vehicle, submitted_dict):
     new_vehicle=base_vehicle.copy()

@@ -5,99 +5,63 @@ import datetime
 import copy
 
 from model.common import ObjDict
-from model.vehicle import setup_vehicle
+from model.battery import Battery
 from model.data import data
 from model.config import *
-
-PRESET_MAN = ["default"]
-PRESET_MOD = [
-    "default",
-    "sedan" "coupe",
-    "suv",
-    "compact",
-    "bev",
-]
-PRESET_CYCLE = [
-    "nedc",
-    "eudc",
-    "hwfe",
-    "ftp",
-    "wltp 3a",
-    "wltp 3b",
-    "wltp 2",
-    "wltp 1",
-]
-
+from model import api
 
 def initialize_vehicle(manufacturer, model, year):
-    vehicle = data["vehicles"].get(PRESET_MOD[model], None)
-    if vehicle is None:
-        raise KeyError(f"{model} not found in vehicle models")
+    vehicle = api.mock_data(manufacturer, model)
     vehicle = ObjDict.wrap_dict(vehicle.copy())
-    if "battery" in vehicle:
-        pass
     return vehicle
 
 
 def initialize_drivecycle(name):
-
-    drive_cycle = data["drive_cycles"].get(PRESET_CYCLE[name], None)
+    drive_cycle = data["drive_cycles"].get(name, None)
     if drive_cycle is None:
         raise KeyError(f"{name} not found in drive cycles")
     drive_cycle_df = drive_cycle.to_df()
     return drive_cycle_df
 
 
-def basic_setup_from_panel(basic_dict):
-    global_parameters = ObjDict()
+def basic_setup_from_web_api(submitted_dict):
+    print(submitted_dict)
+    basic_setup = submitted_dict.pop('setup')
 
-    manufacturer = basic_dict.get("preset_manufacturer", 0)
-    model = basic_dict.get("preset_model", 0)
-    year = basic_dict.get("year", 2020)
-    vehicle = initialize_vehicle(manufacturer, model, year)
-    vehicle = ObjDict.wrap_dict(vehicle)
+    print('* leftover after setup pop', submitted_dict)
+    drive_cycle = initialize_drivecycle(basic_setup['drivecycle'])
 
-    drive_cycle = basic_dict.get("drive_cycle", DEFAULT_DRIVE_CYCLE)
-    if drive_cycle == "default":
-        drive_cycle = DEFAULT_DRIVE_CYCLE
-    drive_cycle = initialize_drivecycle(drive_cycle)
-
-    # At this point we have a copy of the vehicle, and a dataframe constructed from
-    # the drive cycle.
-
-    return global_parameters, vehicle, drive_cycle
-
-
-def config_from_panel():
-    from util.excel_utils import extract_control_panel_values
-
-    panel_dict = extract_control_panel_values()
-
-    global_parameters, vehicle, drive_cycle = basic_setup_from_panel(
-        panel_dict["basic"]
-    )
-    vehicle["_output_name"] = "base_vehicle"
-
-    return_vehicles = [vehicle]
-    if panel_dict["vehicle"]:
-        vehicle_b = ObjDict.wrap_dict(vehicle.copy())
-        vehicle_b.update(panel_dict["vehicle"])
-        vehicle_b["_output_name"] = "modified_vehicle"
-        return_vehicles.append(vehicle_b)
-
-    global_parameters["config_type"] = "control_panel.xlsx"
+    global_parameters={'setup': basic_setup}
+    global_parameters['config_type'] = 'web_api'
     global_parameters["run_datetime"] = datetime.datetime.utcnow().strftime(
         "%y-%m-%d-%H-%M-%S"
     )
 
+    manufacturer = basic_setup["manufacturer"]
+    model = basic_setup["model"]
+    year = 2020
+    base_vehicle = initialize_vehicle(manufacturer, model, year)
+    base_vehicle["_output_name"] = "base_vehicle"
+    return_vehicles = [base_vehicle]
+
+    # Extra, overwritten parameters
+    if submitted_dict:
+        vehicle_b = setup_scenario_vehicle(base_vehicle, submitted_dict)
+        return_vehicles.append(vehicle_b)
+
     return global_parameters, return_vehicles, drive_cycle
 
+def setup_scenario_vehicle(base_vehicle, submitted_dict):
+    new_vehicle=base_vehicle.copy()
+    print(new_vehicle)
+    print(submitted_dict)
+    new_vehicle['_relative_setup'] = submitted_dict
+    for _,v in submitted_dict.items():
+        for key, val in v.items():
+            base_vehicle[key] = val
+
+    base_vehicle['_output_name'] = 'modified_vehicle'
+    return base_vehicle
 
 if __name__ == "__main__":
-    from util.excel_utils import extract_control_panel_values
-
-    # Tests raw panel results
-    print(extract_control_panel_values())
-
-    # Tests the results after configuring
-    print(config_from_panel())
+    pass

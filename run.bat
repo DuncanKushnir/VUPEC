@@ -1,7 +1,3 @@
-@ECHO OFF
-cd src
-cd model
-python run.py
-cd ..
-cd ..
-echo Done!
+call conda activate VUPEC
+python win_run.py
+call conda deactivate

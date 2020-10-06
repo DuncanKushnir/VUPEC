@@ -7,6 +7,9 @@
     <title>VUPEC</title>
     <meta name="theme-color" content="#5eb9d7"/>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script type="text/javascript">
+        window.addEventListener('keydown',function(e){if(e.keyIdentifier=='U+000A'||e.keyIdentifier=='Enter'||e.keyCode==13){if(e.target.nodeName=='INPUT'&&e.target.type=='text'){e.preventDefault();return false;}}},true);
+    </script>
 </head>
 
 <body>
@@ -45,7 +48,13 @@
 
         <div class="generic_spacing">
             <div class="form_wrapper">
-                {% block drivetrain_subform %}{% endblock %}
+                {% block accessory_subform %}{% endblock %}
+            </div>
+        </div>
+
+        <div class="generic_spacing" id="battery_block">
+            <div class="form_wrapper">
+                {% block battery_subform %}{% endblock %}
             </div>
         </div>
 
@@ -145,7 +154,7 @@
                                 let element = document.getElementById(key);
                                 //console.log(key+': '+data.data[key]);
                                 if (element!=null) {
-                                    element.innerHTML = data.data[key];
+                                    element.textContent = data.data[key];
                                 }
 
                             }
@@ -161,9 +170,37 @@
 
                             }
                         }
+                        battery_visible();
                     })
             });
     }
+
+    function toggle_visibility(id) {
+        let state = document.getElementById(id).style.display;
+            if (state == 'block') {
+                document.getElementById(id).style.display = 'none';
+            } else {
+                document.getElementById(id).style.display = 'block';
+            }
+    }
+
+    function make_visible(id) {
+        document.getElementById(id).style.display = 'block';
+    }
+
+    function make_invisible(id) {
+        document.getElementById(id).style.display = 'none';
+    }
+
+    function battery_visible() {
+        let batcap = document.getElementById("batt_cap_base").textContent;
+        if ( batcap == 'None') {
+            make_invisible("battery_block");
+        } else {
+            make_visible("battery_block");
+        }
+    }
+
 
     // State change triggers
     drivecycle_select.onchange = function () {
@@ -178,7 +215,13 @@
 
     model_select.onchange = function () {
         fill_base_values();
+
     };
+
+    document.onchange = function () {
+        console.log('hoo')
+    };
+
 
     window.onload = function () {
         lookup_models();

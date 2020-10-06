@@ -85,6 +85,7 @@ body {
     position: fixed;
     right:0;
     min-width: 465px;
+    max-width: 465px;
     height: 100%;
     float: right;
     margin: 0px 10px 10px 0;
@@ -121,14 +122,15 @@ body {
 }
 
 .generic_spacing {
-    background: var(--main-bg-color);;
+    background: var(--main-bg-color);
     margin: 15px 0 0 0;
+    display: block;
 }
 
 .generic_bottom {
-    position: fixed;
     float: bottom;
 }
+
 
 /* TEXT STYLING ---------------------------------------------------------- */
 
@@ -228,7 +230,32 @@ h1 {
     float: left;
 }
 .col4r {
-    width: 20%;
+    width: 30%;
+    padding: 0 10px 0 0;
+    float: right;
+}
+.rcol1 {
+    width: 30%;
+    padding: 0 10px 0 0;
+    float: left;
+}
+.rcol2 {
+    width: 25%;
+    padding: 0 10px 0 0;
+    float: right;
+}
+.rcol3 {
+    width: 30%;
+    padding: 0 10px 0 0;
+    float: right;
+}
+.lcol1 {
+    width: 45%;
+    padding: 0 10px 0 0;
+    float: left;
+}
+.lcol2 {
+    width: 50%;
     padding: 0 10px 0 0;
     float: right;
 }

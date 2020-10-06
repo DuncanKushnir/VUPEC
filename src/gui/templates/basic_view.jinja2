@@ -42,9 +42,9 @@
     <h2 class="areatitle">Physical</h2>
     <div class="form-field">
         <div class="col1"><h3 class="subtitle">Parameter</h3></div>
-        <div class="col2"><h3 class="subtitle">Base Value</h3></div>
+        <div class="col2"><h3 class="subtitle">Base Vehicle</h3></div>
         <div class="col3"><h3 class="subtitle">Unit</h3></div>
-        <div class="col4"><h3 class="subtitle-r">Set Value</h3></div>
+        <div class="col4"><h3 class="subtitle-r">Scenario Value</h3></div>
 
     </div>
     <p></p>
@@ -83,11 +83,66 @@
     </div>
 {% endblock %}
 
+{% block accessory_subform %}
+    <h2 class="areatitle">Accesories</h2>
+        <div class="form-field">
+        <div class="col1"><h3 class="subtitle">Parameter</h3></div>
+        <div class="col2"><h3 class="subtitle">Base Vehicle</h3></div>
+        <div class="col3"><h3 class="subtitle">Unit</h3></div>
+        <div class="col4"><h3 class="subtitle-r">Scenario Value</h3></div>
+
+    </div>
+    <div class="form-field">
+        <div class="col1">{{ accessory_form.base.label }}</div>
+        <div class="col2" id="accessory_base_base">{{ accessory_form.base_base }}</div>
+        <div class="col3" id="accessory_base_unit">{{ accessory_form.base_unit }}</div>
+        <div class="col4">{{ accessory_form.base }}</div>
+    </div>
+{% endblock %}
+
+{% block battery_subform %}
+    <h2 class="areatitle">Battery</h2>
+        <div class="form-field">
+        <div class="col1"><h3 class="subtitle">Parameter</h3></div>
+        <div class="col2"><h3 class="subtitle">Base Vehicle</h3></div>
+        <div class="col3"><h3 class="subtitle">Unit</h3></div>
+        <div class="col4"><h3 class="subtitle-r">Scenario Value</h3></div>
+
+    </div>
+    <div class="form-field">
+        <div class="col1">{{ battery_form.capacity.label }}</div>
+        <div class="col2" id="batt_cap_base">{{ battery_form.capacity_base }}</div>
+        <div class="col3" id="batt_cap_unit">{{ battery_form.capacity_unit }}</div>
+        <div class="col4">{{ battery_form.capacity }}</div>
+    </div>
+{% endblock %}
+
 {% block result_subform %}
     <h2 class="areatitle">Result</h2>
-        <h3 class="subtitle">Drive Cycle</h3>
-        <div class="generic_bottom">
-            {{ result_form.submit_ab }}
-            {{ result_form.submit_sens }}
-        </div>
+    <div class="form-field">
+        <div class="rcol1"><h3 class="subtitle">Energy Carrier </h3></div>
+        <div class="rcol2"><h3 class="subtitle">Unit </h3></div>
+        <div class="rcol3"><h3 class="subtitle">Consumption</h3></div>
+    </div>
+    <div class="form-field">
+        <div class="rcol1" id="fuel">Petrol</div>
+        <div class="rcol2">L/100km</div>
+        <div class="rcol3" id="ff_consumption"></div>
+    </div>
+    <div class="form-field">
+        <div class="rcol1">Electricity</div>
+        <div class="rcol2">kWh/100km</div>
+        <div class="rcol3" id = "el_consumption"></div>
+    </div>
+    <p></p>
+    <div class="form-field">
+        <h3 class="subtitle">Cumulative Consumption</h3>
+    </div>
+    <div class="form-field">
+        <h3 class="subtitle">SOC</h3>
+    </div>
+    <div class="generic_bottom">
+        {{ result_form.submit_ab }}
+        {{ result_form.submit_sens }}
+    </div>
 {% endblock %}

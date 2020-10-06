@@ -2,6 +2,8 @@
 file parsers
 """
 import os
+import pandas as pd
+
 from model.common import ObjDict
 
 COMMENT_DELIMITER = "#"
@@ -136,4 +138,10 @@ class DictParser(LineParserBase):
                 self.result[-1][line[0]] = line[1:]
 
 
+class CsvParser:
+    def read_file(self):
+        pass
+
+
 register_parser(".dat", DictParser)
+# register_parser(".csv", CsvParser)

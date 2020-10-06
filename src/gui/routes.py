@@ -5,7 +5,14 @@ from flask import current_app as app
 
 from collections import defaultdict
 
-from gui.forms import SetupSubForm, ResultSubForm, PhysicalSubForm, DrivetrainSubForm
+from gui.forms import (
+    SetupSubForm,
+    ResultSubForm,
+    PhysicalSubForm,
+    DrivetrainSubForm,
+    BatterySubForm,
+    AccessorySubForm,
+)
 from gui.data_routes import *
 
 from model import api
@@ -16,7 +23,9 @@ def vehicle():
     setup_form = SetupSubForm(data=api.get_basic_state())
     result_form = ResultSubForm()
     physical_form = PhysicalSubForm()
-    drivetrain_form = DrivetrainSubForm()
+    # drivetrain_form = DrivetrainSubForm()
+    accessory_form = AccessorySubForm()
+    battery_form = BatterySubForm()
     print(setup_form.manufacturer.data, setup_form.is_submitted())
     if setup_form.is_submitted():
         selected_manufacturer = setup_form.manufacturer.data
@@ -30,7 +39,8 @@ def vehicle():
         setup_form=setup_form,
         result_form=result_form,
         physical_form=physical_form,
-        drivetrain_form=drivetrain_form,
+        accessory_form=accessory_form,
+        battery_form=battery_form,
     )
 
 
@@ -46,18 +56,22 @@ def submit():
     setup_form = SetupSubForm()
     result_form = ResultSubForm()
     physical_form = PhysicalSubForm()
-    drivetrain_form = DrivetrainSubForm()
+    accessory_form = AccessorySubForm()
+    battery_form = BatterySubForm()
+    # drivetrain_form = DrivetrainSubForm()
 
-
-    submitted_params['setup'] = setup_form.data
-    submitted_params['physical'] = physical_form.data
-    submitted_params['drivetrain'] = drivetrain_form.data
-    for k,v in submitted_params.items():
+    submitted_params["setup"] = setup_form.data
+    submitted_params["physical"] = physical_form.data
+    submitted_params["battery"] = battery_form.data
+    submitted_params["accessory"] = accessory_form.data
+    for k, v in submitted_params.items():
         for key, val in v.items():
-            if val and key!='csrf_token':
+            if val and key != "csrf_token":
                 filtered_params[k][key] = val
-    return {"submitted_params": submitted_params,
-            "filtered_params" : filtered_params}
+
+    run_params = api.model_setup.basic_setup_from_web_api(filtered_params)
+    results = api.run_model(*run_params)
+    return {"submitted_params": submitted_params, "filtered_params": filtered_params}
 
 
 @app.after_request

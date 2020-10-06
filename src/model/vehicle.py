@@ -1,17 +1,20 @@
 from model import physics
 from model.data import data
 from model.tires import parse_tire_string
+from model.battery import Battery
 
 DATA_ROOT = data["vehicles"]
 
-
 def setup_vehicle(global_params, vehicle):
+    """
+    Turns parameters into objects
+    """
     # Calculate tire parameters
     vehicle.tires.update(parse_tire_string(vehicle.tires.size))
 
     # Setup battery
-    if "battery" in vehicle:
-        print("setup battery")
+    if 'batt_cap' in vehicle:
+        vehicle.battery = Battery(vehicle['batt_cap'], 'li-ion')
 
     return vehicle
 

@@ -9,25 +9,104 @@ from util.locations import GUI_STATIC_DIR
 def get_manufacturer_list():
     return ["generic", "volvo"]
 
+def mock_data(manufacturer, model):
+    if manufacturer == "generic":
+        if model == "generic":
+            result = {
+                "data": {
+                    "mass": 1644,
+                    "coeff_drag": 0.3,
+                    "cross_section": 2.4,
+                    "coeff_rr": 0.100,
+                    "accessory_base": 100,
+                    "batt_cap": "None",
+                    "tires": {'size': 'P255/65R16'},
+                }
+            }
+
+        elif model == "generic_suv":
+            result = {
+                "data": {
+                    "mass": 2200,
+                    "coeff_drag": 0.34,
+                    "cross_section": 3.1,
+                    "coeff_rr": 0.100,
+                    "accessory_base": 100,
+                    "batt_cap": "None",
+                    "tires": {'size': 'P255/65R16'},
+                }
+            }
+
+    elif manufacturer == "volvo":
+        if model == "s60":
+            result = {
+                "data": {
+                    "mass": 1600,
+                    "coeff_drag": 0.27,
+                    "cross_section": 2.22,
+                    "coeff_rr": 0.090,
+                    "accessory_base": 100,
+                    "batt_cap": "None",
+                    "tires": {'size': 'P255/65R16'},
+                }
+            }
+
+        elif model == "s60_twen":
+            result = {
+                "data": {
+                    "mass": 1950,
+                    "coeff_drag": 0.27,
+                    "cross_section": 2.22,
+                    "coeff_rr": 0.090,
+                    "accessory_base": 100,
+                    "batt_cap": 11.6,
+                    "tires": {'size': 'P255/65R16'},
+                }
+            }
+
+        elif model == "s90":
+            result = {
+                "data": {
+                    "mass": 1700,
+                    "coeff_drag": 0.26,
+                    "cross_section": 2.29,
+                    "coeff_rr": 0.090,
+                    "accessory_base": 100,
+                    "batt_cap": "None",
+                    "tires": {'size': 'P255/65R16'},
+                }
+            }
+
+        elif model == "s90_twen":
+            result = {
+                "data": {
+                    "mass": 2000,
+                    "coeff_drag": 0.26,
+                    "cross_section": 2.29,
+                    "coeff_rr": 0.090,
+                    "accessory_base": 100,
+                    "batt_cap": 11.6,
+                    "tires": {'size': 'P255/65R16'},
+                }
+            }
+
+    return result
+
+
+
 def setup_model(manufacturer, model, drivecycle):
     state.MANUFACTURER = manufacturer
     state.MODEL = model
     state.DRIVE_CYCLE = drivecycle
-    if manufacturer == 'generic':
-        return {'data': {'mass' : 1644,
-                         'coeff_drag': 0.3,
-                         'cross_section': 2.5,
-                         'coeff_rr': 0.100}}
-    return {'data': {'mass': 1344,
-                     'coeff_drag': 0.32,
-                     'cross_section': 2.7,
-                     'coeff_rr': 0.090}}
+    return mock_data(manufacturer, model)
 
+def run_model(global_params, vehicles, drive_cycle):
+    print(global_params,vehicles,drive_cycle)
 
 def get_model_list(manufacturer):
     if manufacturer == "generic":
         return ["generic", "generic_suv"]
-    return ["c70", "c80", "v70", "v60"]
+    return ["s60", "s60_twen", "s90", "s90_twen"]
 
 
 def get_drivecycle_list():
@@ -56,6 +135,7 @@ def get_basic_state():
         "drive_cycle": state.DRIVE_CYCLE,
     }
     return basic_state
+
 
 def process_submit(submit_dict):
     pass

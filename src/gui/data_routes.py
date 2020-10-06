@@ -16,18 +16,23 @@ def get_models(manufacturer):
 def get_vehicle_state():
     pass
 
+
 @app.route("/data/getbase/<manufacturer>/<model>/<drivecycle>")
 def set_base_model(manufacturer, model, drivecycle):
-    if model == 'generic' and manufacturer!= 'generic':
+    if model.startswith("generic") and not manufacturer == "generic":
+        model = api.get_model_list(manufacturer)[0]
+    if not model.startswith("generic") and manufacturer == "generic":
         model = api.get_model_list(manufacturer)[0]
 
-    print('setbasemodel', manufacturer, model, drivecycle)
+    print("setbasemodel", manufacturer, model, drivecycle)
     default_params = api.setup_model(manufacturer, model, drivecycle)
-    base_params = {'data': {key+'_base' : val for key, val in default_params[
-        'data'].items()}}
-    base_params['orig'] = default_params['data']
+    base_params = {
+        "data": {key + "_base": val for key, val in default_params["data"].items()}
+    }
+    base_params["orig"] = default_params["data"]
 
     return json.dumps(base_params)
+
 
 @app.route("/data/dc/<drive_cycle>")
 def update_drive_cycle(drive_cycle):

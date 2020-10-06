@@ -41,7 +41,7 @@ class DrivetrainSubForm(FlaskForm):
 
 
 class AccessorySubForm(FlaskForm):
-    base = FloatField("Base Power", id="accessory_base")
+    base = FloatField("Accessory Power", id="accessory_base")
     base_base = None
     base_unit = "W"
 

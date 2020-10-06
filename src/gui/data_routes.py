@@ -25,12 +25,12 @@ def set_base_model(manufacturer, model, drivecycle):
         model = api.get_model_list(manufacturer)[0]
 
     print("setbasemodel", manufacturer, model, drivecycle)
-    default_params = api.setup_model(manufacturer, model, drivecycle)
+    data_params = api.setup_model(manufacturer, model, drivecycle)
     base_params = {
-        "data": {key + "_base": val for key, val in default_params["data"].items()}
+        "data": {key + "_base": val for key, val in data_params["data"].items()},
+        "result": data_params['result']
     }
-    base_params["orig"] = default_params["data"]
-
+    base_params["orig"] = data_params["data"]
     return json.dumps(base_params)
 
 

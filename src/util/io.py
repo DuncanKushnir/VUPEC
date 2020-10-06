@@ -1,8 +1,5 @@
 import os
 
-import util.locations as loc
-
-
 def list_subfolders(path):
     """
     returns the subfolders of a given path
@@ -56,14 +53,3 @@ def process_subdir_files(path, process_function, ext_whitelist=None):
         dname: process_files(dpath, process_function, ext_whitelist)
         for dname, dpath in list_subfolders(path)
     }
-
-
-def grab_control_panel():
-    """
-    Gets the excel control panel for input
-    :return: an openpyxl workbook
-    """
-    import openpyxl
-
-    wb = openpyxl.load_workbook(loc.CTL_PANEL_FILE)
-    return wb

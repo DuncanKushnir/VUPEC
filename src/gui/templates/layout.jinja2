@@ -148,6 +148,7 @@
             .then(function(response) {
                 response.json()
                     .then(function (data) {
+                        console.log(data)
                         // Fill from database
                         for (var key in data.data) {
                             if (data.data.hasOwnProperty(key)) {
@@ -155,6 +156,16 @@
                                 //console.log(key+': '+data.data[key]);
                                 if (element!=null) {
                                     element.textContent = data.data[key];
+                                }
+
+                            }
+                        }
+                        for (var key in data.result) {
+                            if (data.result.hasOwnProperty(key)) {
+                                let element = document.getElementById(key);
+                                //console.log(key+': '+data.data[key]);
+                                if (element!=null) {
+                                    element.textContent = data.result[key];
                                 }
 
                             }

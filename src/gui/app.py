@@ -4,7 +4,7 @@ import webbrowser
 from gui import create_app
 import config as cfg
 
-def run(suppress_output = False):
+def run(suppress_output = False, override_host= False, override_port=False):
     app = create_app()
     app.jinja_env.auto_reload = True
     app.config["TEMPLATES_AUTO_RELOAD"] = True
@@ -13,9 +13,10 @@ def run(suppress_output = False):
         log = logging.getLogger('werkzeug')
         log.disabled = True
         app.logger.disabled = True
-    webbrowser.open(f"{cfg.DEFAULT_HOST}:{cfg.DEFAULT_PORT}", new=1)
     print('Running on http:/127.0.0.1:5000')
-    app.run(host=cfg.DEFAULT_HOST, port=cfg.DEFAULT_PORT, debug=True)
+    host = override_host if override_host else cfg.DEFAULT_HOST
+    port = override_port if override_port else cfg.DEFAULT_PORT
+    app.run(host=host, port=port, debug=True)
 
 
 

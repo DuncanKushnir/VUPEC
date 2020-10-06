@@ -15,9 +15,10 @@ From first physics principles through to energy inputs to the vehicle (petrol, n
 - Calculates standard driving cycle energy use to within 5% of reported - all vehicle makes, all
  drive cycles
  - graph friendly result dumping
- - launch from excel control panel or from JSON-rpc
+ - web based GUI
  
- ##### In progress
- - Monte Carlo testing of variable sensitivity (wiring up)
- 
- ##
+ ## Get Started
+- Clone the directory
+- run setup.bat or setup.sh to set up a virtual env (depending on win/linux)
+- run.bat or run.sh
+- navigate a web browser to http://127.0.0.1

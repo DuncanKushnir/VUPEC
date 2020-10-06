@@ -7,5 +7,5 @@ sys.path.append(src_dir)
 
 from gui import app
 
-app.run(suppress_output=False)
+app.run(suppress_output=False, override_host="0.0.0.0", override_port=5000)
 

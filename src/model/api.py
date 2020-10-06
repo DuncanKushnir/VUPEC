@@ -1,7 +1,8 @@
 import os
 import matplotlib.pyplot as plt
 
-from model import state, data, model_setup
+from model import state, data, model_setup, run
+from model.mock_data import mock_data
 
 from util.locations import GUI_STATIC_DIR
 
@@ -9,99 +10,24 @@ from util.locations import GUI_STATIC_DIR
 def get_manufacturer_list():
     return ["generic", "volvo"]
 
-def mock_data(manufacturer, model):
-    if manufacturer == "generic":
-        if model == "generic":
-            result = {
-                "data": {
-                    "mass": 1644,
-                    "coeff_drag": 0.3,
-                    "cross_section": 2.4,
-                    "coeff_rr": 0.100,
-                    "accessory_base": 100,
-                    "batt_cap": "None",
-                    "tires": {'size': 'P255/65R16'},
-                }
-            }
-
-        elif model == "generic_suv":
-            result = {
-                "data": {
-                    "mass": 2200,
-                    "coeff_drag": 0.34,
-                    "cross_section": 3.1,
-                    "coeff_rr": 0.100,
-                    "accessory_base": 100,
-                    "batt_cap": "None",
-                    "tires": {'size': 'P255/65R16'},
-                }
-            }
-
-    elif manufacturer == "volvo":
-        if model == "s60":
-            result = {
-                "data": {
-                    "mass": 1600,
-                    "coeff_drag": 0.27,
-                    "cross_section": 2.22,
-                    "coeff_rr": 0.090,
-                    "accessory_base": 100,
-                    "batt_cap": "None",
-                    "tires": {'size': 'P255/65R16'},
-                }
-            }
-
-        elif model == "s60_twen":
-            result = {
-                "data": {
-                    "mass": 1950,
-                    "coeff_drag": 0.27,
-                    "cross_section": 2.22,
-                    "coeff_rr": 0.090,
-                    "accessory_base": 100,
-                    "batt_cap": 11.6,
-                    "tires": {'size': 'P255/65R16'},
-                }
-            }
-
-        elif model == "s90":
-            result = {
-                "data": {
-                    "mass": 1700,
-                    "coeff_drag": 0.26,
-                    "cross_section": 2.29,
-                    "coeff_rr": 0.090,
-                    "accessory_base": 100,
-                    "batt_cap": "None",
-                    "tires": {'size': 'P255/65R16'},
-                }
-            }
-
-        elif model == "s90_twen":
-            result = {
-                "data": {
-                    "mass": 2000,
-                    "coeff_drag": 0.26,
-                    "cross_section": 2.29,
-                    "coeff_rr": 0.090,
-                    "accessory_base": 100,
-                    "batt_cap": 11.6,
-                    "tires": {'size': 'P255/65R16'},
-                }
-            }
-
-    return result
-
-
 
 def setup_model(manufacturer, model, drivecycle):
-    state.MANUFACTURER = manufacturer
-    state.MODEL = model
-    state.DRIVE_CYCLE = drivecycle
-    return mock_data(manufacturer, model)
+    base_setup = {'manufacturer' :manufacturer,
+                  'model': model,
+                  'drivecycle': drivecycle}
+
+    model_setup.setup_base_vehicle(base_setup)
+    state.BASE_RESULT = run.single_pass(state.GLOBAL_PARAMS,
+                                        state.BASE_VEHICLE,
+                                        state.DRIVE_CYCLE)
+    result = mock_data(manufacturer, model)
+    result.update(run.extract_efficiencies(state.BASE_RESULT,
+                                           state.DRIVE_CYCLE))
+    return result
 
 def run_model(global_params, vehicles, drive_cycle):
-    print(global_params,vehicles,drive_cycle)
+    print(global_params, vehicles, drive_cycle)
+    run.run(global_params, vehicles, drive_cycle)
 
 def get_model_list(manufacturer):
     if manufacturer == "generic":

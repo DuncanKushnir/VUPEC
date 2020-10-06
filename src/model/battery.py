@@ -11,7 +11,8 @@ def constant_eff(c_val, c_eff=0.95):
 
 
 class Battery:
-    def __init__(self, capacity_kwh, chemistry, ucl, lcl, efficiency_curve=None):
+    def __init__(self, capacity_kwh, chemistry, ucl=0.9, lcl=0.1,
+                 efficiency_curve=None):
         """
         A tier 1 battery implementation that can use either a constant or varying
         efficiency curve to calculate internal soc changes and heat losses for
@@ -29,7 +30,7 @@ class Battery:
         or can be passed a curve object that must report a decimal efficiency (0 ->
         1.0) when given a c value.
         """
-        self.capacity_kwh = capacity_kwh
+        self.capacity_kwh = float(capacity_kwh)
         self.name = f"{capacity_kwh} kWh: {chemistry}"
         self.capacity_j = capacity_kwh * KWH_J
         self.ucl = ucl

@@ -13,9 +13,10 @@ def setup_vehicle(global_params, vehicle):
     vehicle.tires.update(parse_tire_string(vehicle.tires.size))
 
     # Setup battery
-    if 'batt_cap' in vehicle:
+    if vehicle.batt_cap != 'None':
         vehicle.battery = Battery(vehicle['batt_cap'], 'li-ion')
-
+    else:
+        vehicle.battery = None
     return vehicle
 
 

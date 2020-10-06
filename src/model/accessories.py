@@ -24,7 +24,7 @@ def electric_connected_accessories(global_params, vehicle, model_df):
     :param vehicle: a vehicle.Vehicle object
     :param model_df: the model dataframe
     """
-    static_accessories = vehicle.accessories.base * model_df["duration"]
+    static_accessories = vehicle.accessory_base * model_df["duration"]
 
     model_df["electric_demand_accessory"] = static_accessories
 

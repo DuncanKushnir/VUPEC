@@ -88,8 +88,10 @@ def allocate_demands(global_params, vehicle, model_df):
     # If not an electric, then accessory power comes from an alternator
     if not vehicle.battery:
         model_df["energy_engine_alternator"] = (
-            model_df["electric_demand_accessory"] / vehicle.eff_alternator
+            model_df["electric_demand_accessory"] / 0.78
         )
+    else:
+        model_df["energy_engine_alternator"] = 0
 
     model_df["energy_from_engine"] = (
         model_df[model_df["energy_engine_driveshaft"] > 0]["energy_engine_driveshaft"]

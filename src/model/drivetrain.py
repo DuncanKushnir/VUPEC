@@ -94,8 +94,8 @@ def allocate_demands(global_params, vehicle, model_df):
         model_df["energy_engine_alternator"] = 0
 
     model_df["energy_from_engine"] = (
+        model_df["energy_engine_alternator"] +
         model_df[model_df["energy_engine_driveshaft"] > 0]["energy_engine_driveshaft"]
-        + model_df["energy_engine_alternator"]
     )
 
     return model_df

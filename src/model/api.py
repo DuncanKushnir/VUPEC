@@ -25,6 +25,19 @@ def setup_model(manufacturer, model, drivecycle):
                                            state.DRIVE_CYCLE))
     return result
 
+def setup_alternate_model(new_params):
+    base_vehicle = state.BASE_VEHICLE.copy()
+    model_setup.setup_scenario_vehicle(base_vehicle, new_params)
+    print('****', state.ALT_VEHICLE)
+    state.ALT_RESULT = run.single_pass(state.GLOBAL_PARAMS,
+                                       state.ALT_VEHICLE,
+                                       state.DRIVE_CYCLE)
+    result = {}
+    result.update(run.extract_efficiencies(state.ALT_RESULT,
+                                           state.DRIVE_CYCLE,
+                                           prefix='alt_'))
+    return result
+
 def run_model(global_params, vehicles, drive_cycle):
     print(global_params, vehicles, drive_cycle)
     run.run(global_params, vehicles, drive_cycle)

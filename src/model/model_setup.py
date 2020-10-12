@@ -40,11 +40,22 @@ def setup_base_vehicle(basic_setup):
     state.MODEL = model
     state.DRIVE_CYCLE = drive_cycle
     state.BASE_VEHICLE = base_vehicle
-    state.DRIVE_CYCLE = drive_cycle
     state.GLOBAL_PARAMS = global_parameters
 
     return base_vehicle
 
+def setup_scenario_vehicle(base_vehicle, submitted_dict):
+    new_vehicle=base_vehicle.copy()
+    new_vehicle=base_vehicle.copy()
+    new_vehicle['_relative_setup'] = submitted_dict
+    for _,v in submitted_dict.items():
+        for key, val in v.items():
+            new_vehicle[key] = val
+
+    new_vehicle['_output_name'] = 'modified_vehicle'
+    new_vehicle=ObjDict.wrap_dict(new_vehicle)
+    state.ALT_VEHICLE = new_vehicle
+    return new_vehicle
 
 def basic_setup_from_web_api(submitted_dict):
     print(submitted_dict)
@@ -60,17 +71,7 @@ def basic_setup_from_web_api(submitted_dict):
 
     return state.GLOBAL_PARAMS, return_vehicles, state.DRIVE_CYCLE
 
-def setup_scenario_vehicle(base_vehicle, submitted_dict):
-    new_vehicle=base_vehicle.copy()
-    print(new_vehicle)
-    print(submitted_dict)
-    new_vehicle['_relative_setup'] = submitted_dict
-    for _,v in submitted_dict.items():
-        for key, val in v.items():
-            new_vehicle[key] = val
 
-    new_vehicle['_output_name'] = 'modified_vehicle'
-    return ObjDict.wrap_dict(new_vehicle)
 
 if __name__ == "__main__":
     pass

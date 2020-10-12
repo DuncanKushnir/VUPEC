@@ -58,7 +58,6 @@ def submit():
     physical_form = PhysicalSubForm()
     accessory_form = AccessorySubForm()
     battery_form = BatterySubForm()
-    # drivetrain_form = DrivetrainSubForm()
 
     submitted_params["setup"] = setup_form.data
     submitted_params["physical"] = physical_form.data
@@ -72,6 +71,31 @@ def submit():
     run_params = api.model_setup.basic_setup_from_web_api(filtered_params)
     results = api.run_model(*run_params)
     return {"submitted_params": submitted_params, "filtered_params": filtered_params}
+
+@app.route("/updatescenario", methods=(["GET", "POST"]))
+def update():
+    submitted_params = {}
+    filtered_params = defaultdict(dict)
+    setup_form = SetupSubForm()
+    result_form = ResultSubForm()
+    physical_form = PhysicalSubForm()
+    accessory_form = AccessorySubForm()
+    battery_form = BatterySubForm()
+
+    submitted_params["setup"] = setup_form.data
+    submitted_params["physical"] = physical_form.data
+    submitted_params["battery"] = battery_form.data
+    submitted_params["accessory"] = accessory_form.data
+    for k, v in submitted_params.items():
+        for key, val in v.items():
+            if val and key != "csrf_token":
+                filtered_params[k][key] = val
+    response = {}
+    print('***', filtered_params)
+    if filtered_params:
+        response = api.setup_alternate_model(filtered_params)
+
+    return json.dumps(response)
 
 
 @app.after_request

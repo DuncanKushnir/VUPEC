@@ -40,8 +40,10 @@ def idle(global_params, vehicle, model_df):
     """
     Determines idling behaviour
     """
-    wheel_energy_required_mask = model_df["energy_wheel"] == 0
-    energy_wheel = model_df.loc[wheel_energy_required_mask, "energy_wheel"]
+    idle_mask = model_df["energy_wheel"] == 0
+    energy_wheel = model_df.loc[idle_mask, "energy_wheel"]
+    model_df['engine_energy_idle'] = 0
+    model_df['engine_energy_idle'] += energy_wheel+300
     if vehicle:
         pass
 

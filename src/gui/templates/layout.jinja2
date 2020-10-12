@@ -18,6 +18,9 @@
     <div class="contentheader">
     <div class="title_area">
         <h2 id="main_title">VUPEC: Vehicle Use Phase Energy Calculator - Basic Interface</h2>
+        <h2 id="footer_text">Funded by  <a href="http://www.energimyndigheten.se/"
+                                           target="_blank" class="title_link">
+        EnergiMyndigheten </a> as part of ERA-NET cofunding for EU HORIZON 2020.</h2>
     </div>
     </div>
 </header>
@@ -60,32 +63,32 @@
 
         <div class="generic_spacing">
             <div class="form_wrapper">
-                this shit can be scrolled indefinitely</br>
-                this shit can be scrolled indefinitely</br>
-                this shit can be scrolled indefinitely</br>
-                this shit can be scrolled indefinitely</br>
-                this shit can be scrolled indefinitely</br>
-                this shit can be scrolled indefinitely</br>
-                this shit can be scrolled indefinitely</br>
-                this shit can be scrolled indefinitely</br>
-                this shit can be scrolled indefinitely</br>
-                this shit can be scrolled indefinitely</br>
-                this shit can be scrolled indefinitely</br>
-                this shit can be scrolled indefinitely</br>
-                this shit can be scrolled indefinitely</br>
-                this shit can be scrolled indefinitely</br>
-                this shit can be scrolled indefinitely</br>
-                this shit can be scrolled indefinitely</br>
-                this shit can be scrolled indefinitely</br>
-                this shit can be scrolled indefinitely</br>
-                this shit can be scrolled indefinitely</br>
-                this shit can be scrolled indefinitely</br>
-                this shit can be scrolled indefinitely</br>
-                this shit can be scrolled indefinitely</br>
-                this shit can be scrolled indefinitely</br>
-                this shit can be scrolled indefinitely</br>
-                this shit can be scrolled indefinitely</br>
-                this shit can be scrolled indefinitely</br>
+                indefinite amounts of stuff can be scrolled</br>
+                indefinite amounts of stuff can be scrolled</br>
+                indefinite amounts of stuff can be scrolled</br>
+                indefinite amounts of stuff can be scrolled</br>
+                indefinite amounts of stuff can be scrolled</br>
+                indefinite amounts of stuff can be scrolled</br>
+                indefinite amounts of stuff can be scrolled</br>
+                indefinite amounts of stuff can be scrolled</br>
+                indefinite amounts of stuff can be scrolled</br>
+                indefinite amounts of stuff can be scrolled</br>
+                indefinite amounts of stuff can be scrolled</br>
+                indefinite amounts of stuff can be scrolled</br>
+                indefinite amounts of stuff can be scrolled</br>
+                indefinite amounts of stuff can be scrolled</br>
+                indefinite amounts of stuff can be scrolled</br>
+                indefinite amounts of stuff can be scrolled</br>
+                indefinite amounts of stuff can be scrolled</br>
+                indefinite amounts of stuff can be scrolled</br>
+                indefinite amounts of stuff can be scrolled</br>
+                indefinite amounts of stuff can be scrolled</br>
+                indefinite amounts of stuff can be scrolled</br>
+                indefinite amounts of stuff can be scrolled</br>
+                indefinite amounts of stuff can be scrolled</br>
+                indefinite amounts of stuff can be scrolled</br>
+                indefinite amounts of stuff can be scrolled</br>
+                indefinite amounts of stuff can be scrolled</br>
             </div>
         </div>
     </div>
@@ -93,14 +96,7 @@
 </form>
 
 
-<footer>
-    <div class="contentfooter">
-    <div class="generic_area">
-        <h2 id="footer_text">Funded by  <a href="http://www.energimyndigheten.se/" target="_blank">
-        EnergiMyndigheten </a> as part of ERA-NET cofunding for EU HORIZON 2020.</h2>
-    </div>
-    </div>
-</footer>
+
 
 </body>
 
@@ -111,6 +107,7 @@
     let manufacturer_select = document.getElementById('manufacturer');
     let model_select = document.getElementById('model');
     let drivecycle_select = document.getElementById('drivecycle');
+    let form_data = document.getElementById('parameter_form');
 
     // Do stuff
     function lookup_models() {
@@ -148,42 +145,41 @@
             .then(function(response) {
                 response.json()
                     .then(function (data) {
-                        console.log(data)
-                        // Fill from database
-                        for (var key in data.data) {
-                            if (data.data.hasOwnProperty(key)) {
-                                let element = document.getElementById(key);
-                                //console.log(key+': '+data.data[key]);
-                                if (element!=null) {
-                                    element.textContent = data.data[key];
-                                }
-
-                            }
-                        }
-                        for (var key in data.result) {
-                            if (data.result.hasOwnProperty(key)) {
-                                let element = document.getElementById(key);
-                                //console.log(key+': '+data.data[key]);
-                                if (element!=null) {
-                                    element.textContent = data.result[key];
-                                }
-
-                            }
-                        }
+                        console.log(data);
                         // clear set values
-                        for (var key in data.orig) {
-                            if (data.orig.hasOwnProperty(key)) {
-                                let element = document.getElementById(key);
-                                //console.log(key + ': ' + data.orig[key]);
-                                if (element != null) {
-                                    element.value = '';
-                                }
-
-                            }
-                        }
+                        clear_from_dict(data.orig);
+                        // Fill from database
+                        update_from_dict(data.data);
+                        // Fill model results
+                        update_from_dict(data.result);
                         battery_visible();
                     })
             });
+    }
+    function clear_from_dict(dat) {
+        for (var key in dat) {
+            if (dat.hasOwnProperty(key)) {
+                let element = document.getElementById(key);
+
+                if (element != null) {
+                    element.value = '';
+                }
+
+            }
+        }
+    }
+
+    function update_from_dict(dat) {
+        for (var key in dat) {
+            if (dat.hasOwnProperty(key)) {
+                let element = document.getElementById(key);
+                //console.log(key+': '+data.data[key]);
+                if (element!=null) {
+                    element.textContent = dat[key];
+                }
+
+            }
+        }
     }
 
     function toggle_visibility(id) {
@@ -203,12 +199,18 @@
         document.getElementById(id).style.display = 'none';
     }
 
+    function changed_input() {
+        console.log('hmmm')
+    }
+
     function battery_visible() {
         let batcap = document.getElementById("batt_cap_base").textContent;
         if ( batcap == 'None') {
             make_invisible("battery_block");
+            make_invisible("battery_soc");
         } else {
             make_visible("battery_block");
+            make_visible("battery_soc");
         }
     }
 
@@ -229,8 +231,18 @@
 
     };
 
-    document.onchange = function () {
-        console.log('hoo')
+    document.oninput = function () {
+        console.log('Change');
+        fetch('/updatescenario',
+            {method:'POST',
+            body: new FormData(form_data)})
+            .then(function(response) {
+                response.json()
+                    .then(function (data) {
+                        console.log(data);
+                        update_from_dict(data.result);
+                    })
+            });
     };
 
 

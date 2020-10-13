@@ -108,6 +108,9 @@
     let model_select = document.getElementById('model');
     let drivecycle_select = document.getElementById('drivecycle');
     let form_data = document.getElementById('parameter_form');
+    let phys_data = document.getElementById('physical_subform');
+    let acc_data = document.getElementById('accessory_subform');
+    let batt_data = document.getElementById('battery_subform');
 
     // Do stuff
     function lookup_models() {
@@ -204,13 +207,13 @@
     }
 
     function battery_visible() {
-        let batcap = document.getElementById("batt_cap_base").textContent;
-        if ( batcap == 'None') {
+        let batcap = document.getElementById("battery_capacity_base").textContent;
+        if ( batcap == 0) {
             make_invisible("battery_block");
-            make_invisible("battery_soc");
+            make_invisible("battery_stats");
         } else {
             make_visible("battery_block");
-            make_visible("battery_soc");
+            make_visible("battery_stats");
         }
     }
 
@@ -228,10 +231,9 @@
 
     model_select.onchange = function () {
         fill_base_values();
-
     };
 
-    document.oninput = function () {
+    form_data.onchange = function () {
         console.log('Change');
         fetch('/updatescenario',
             {method:'POST',

@@ -3,7 +3,7 @@ from model.constants import *
 
 
 def process_battery_demand(global_parameters, vehicle, model_df):
-    if vehicle.battery:
+    if vehicle.battery.capacity:
         model_df = process_inverter(global_parameters, vehicle, model_df)
         soc, losses = [], []
         batt = vehicle.battery_obj
@@ -46,7 +46,7 @@ def constant_eff(c_val, c_eff=0.95):
 
 class Battery:
     def __init__(
-        self, capacity_kwh, chemistry, ucl=0.9, lcl=0.1, efficiency_curve=None
+        self, capacity_kwh, chemistry, ucl=0.8, lcl=0.2, efficiency_curve=None
     ):
         """
         A tier 1 battery implementation that can use either a constant or varying

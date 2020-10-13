@@ -92,7 +92,7 @@ def flatten_vehicle_dict(vehicle, base_key=""):
         if isinstance(v, dict):
             result.update(flatten_vehicle_dict(v, base_key=f"{k}_"))
         else:
-            result[k] = v
+            result[f'{base_key}{k}'] = v
     return result
 
 

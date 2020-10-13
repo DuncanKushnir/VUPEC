@@ -22,7 +22,7 @@ def source_energy(global_params, vehicle, model_df):
         / vehicle.drivetrain.eff_diff
     )
 
-    if vehicle.battery and not vehicle.drivetrain.parallel:
+    if vehicle.battery.capacity and not vehicle.drivetrain.parallel:
         model_df.loc[
             wheel_energy_required_mask, "energy_need_electric_motor"
         ] = model_df.loc[wheel_energy_required_mask, "energy_need_transmission"]
@@ -201,7 +201,7 @@ def calculate_drivetrain_endpoints(global_params, vehicle, model_df):
     model_df = account_accel_ineff(global_params, vehicle, model_df)
     model_df = finish_ff_calculation(global_params, vehicle, model_df)
 
-    if vehicle.battery:
+    if vehicle.battery.capacity:
         model_df["energy_draw_inverter"] = (
             model_df["remaining_el_need_accessory"]
             + model_df["energy_need_battery"]

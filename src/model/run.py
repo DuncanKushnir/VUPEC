@@ -31,7 +31,7 @@ def extract_efficiencies(model_df, drive_cycle, prefix=""):
     else:
         el_economy = 0.0
 
-    petrol_economy = "{:g}".format(float("{:.{p}g}".format(petrol_economy * 1.2, p=3)))
+    petrol_economy = "{:g}".format(float("{:.{p}g}".format(petrol_economy, p=3)))
     el_economy = "{:g}".format(float("{:.{p}g}".format(el_economy, p=3)))
     return {
         "result": {

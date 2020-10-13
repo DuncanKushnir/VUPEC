@@ -50,29 +50,29 @@
     <p></p>
     <div class="form-field">
         <div class="col1">{{ physical_form.mass.label }}</div>
-        <div class="col2" id="mass_base">{{ physical_form.mass_base }}</div>
-        <div class="col3" id="mass_unit">{{ physical_form.mass_unit }}</div>
+        <div class="col2" id="physical_mass_base">{{ physical_form.mass_base }}</div>
+        <div class="col3" id="physical_mass_unit">{{ physical_form.mass_unit }}</div>
         <div class="col4">{{ physical_form.mass }}</div>
     </div>
     <p></p>
     <div class="form-field">
         <div class="col1">{{ physical_form.coeff_drag.label }}</div>
-        <div class="col2" id="coeff_drag_base">{{ physical_form.coeff_drag_base }}</div>
-        <div class="col3" id="coeff_drag_unit">{{ physical_form.coeff_drag_unit }}</div>
+        <div class="col2" id="physical_coeff_drag_base">{{ physical_form.coeff_drag_base }}</div>
+        <div class="col3" id="physical_coeff_drag_unit">{{ physical_form.coeff_drag_unit }}</div>
         <div class="col4">{{ physical_form.coeff_drag }}</div>
     </div>
     <p></p>
     <div class="form-field">
         <div class="col1">{{ physical_form.cross_section.label }}</div>
-        <div class="col2" id="cross_section_base">{{ physical_form.cross_section_base }}</div>
-        <div class="col3" id="cross_section_unit">{{ physical_form.cross_section_unit }}</div>
+        <div class="col2" id="physical_cross_section_base">{{ physical_form.cross_section_base }}</div>
+        <div class="col3" id="physical_cross_section_unit">{{ physical_form.cross_section_unit }}</div>
         <div class="col4">{{ physical_form.cross_section }}</div>
     </div>
     <p></p>
     <div class="form-field">
         <div class="col1">{{ physical_form.coeff_rr.label }}</div>
-        <div class="col2" id="coeff_rr_base">{{ physical_form.coeff_rr_base }}</div>
-        <div class="col3" id="coeff_rr_unit">{{ physical_form.coeff_rr_unit }}</div>
+        <div class="col2" id="physical_coeff_rr_base">{{ physical_form.coeff_rr_base }}</div>
+        <div class="col3" id="physical_coeff_rr_unit">{{ physical_form.coeff_rr_unit }}</div>
         <div class="col4">{{ physical_form.coeff_rr }}</div>
     </div>
 {% endblock %}
@@ -111,8 +111,8 @@
     </div>
     <div class="form-field">
         <div class="col1">{{ battery_form.capacity.label }}</div>
-        <div class="col2" id="batt_cap_base">{{ battery_form.capacity_base }}</div>
-        <div class="col3" id="batt_cap_unit">{{ battery_form.capacity_unit }}</div>
+        <div class="col2" id="battery_capacity_base">{{ battery_form.capacity_base }}</div>
+        <div class="col3" id="battery_capacity_unit">{{ battery_form.capacity_unit }}</div>
         <div class="col4">{{ battery_form.capacity }}</div>
     </div>
 {% endblock %}
@@ -153,8 +153,23 @@
         <div class="rcol3" id = "alt_el_consumption"></div>
     </div>
     <p></p>
-    <div class="form-field" id="battery_soc">
-        <h2 class="minorareatitle">SOC</h2>
+    <div class="form-field" id="battery_stats">
+    <h2 class="minorareatitle">Battery Statistics</h2>
+    <div class="form-field">
+        <div class="rcol1"><h3 class="subtitle">Parameter </h3></div>
+        <div class="rcol2"><h3 class="subtitle">User</h3></div>
+        <div class="rcol3"><h3 class="subtitle">Base</h3></div>
+    </div>
+    <div class="form-field">
+        <div class="rcol1">Minimum SOC</div>
+        <div class="rcol2">User</div>
+        <div class="rcol3">Base</div>
+    </div>
+    <div class="form-field">
+        <div class="rcol1">Maximum C</div>
+        <div class="rcol2">User</div>
+        <div class="rcol3">Base</div>
+    </div>
     </div>
     <div class="generic_bottom">
         {{ result_form.submit_ab }}

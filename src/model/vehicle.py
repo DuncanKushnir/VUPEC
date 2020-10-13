@@ -14,7 +14,7 @@ def setup_vehicle(global_params, vehicle):
     vehicle.tires.update(parse_tire_string(vehicle.tires.size))
 
     # Setup battery
-    if vehicle.battery:
+    if vehicle.battery.capacity:
         vehicle.el_motor.obj = ElectricMotor()
         vehicle.battery_obj = Battery(vehicle.battery.capacity, "li-ion")
     else:

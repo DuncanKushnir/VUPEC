@@ -31,6 +31,7 @@ def set_base_model(manufacturer, model, drivecycle):
         "result": data_params["result"],
     }
     base_params["orig"] = data_params["data"]
+    print(base_params)
     return json.dumps(base_params)
 
 

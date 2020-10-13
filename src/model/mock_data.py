@@ -15,7 +15,7 @@ MOCK_TIRES = {"size": "P255/65R16"}
 
 MOCK_ACCESSORIES = {"base": 100}
 
-MOCK_BATTERY = {}
+MOCK_BATTERY = {"capacity": 0}
 
 
 
@@ -126,6 +126,7 @@ def mock_data(manufacturer, model):
                     "battery": {"capacity": 11.6},
                     "drivetrain": MOCK_DRIVETRAIN,
                     "tires": MOCK_TIRES,
+                    "ff_motor": MOCK_FF_MOTOR,
                     "el_motor": {"power": 65,
                                  "max_torque": 250},
                 }

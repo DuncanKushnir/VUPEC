@@ -12,7 +12,7 @@ def belt_connected_accessories(global_params, vehicle, model_df):
     :param vehicle: a vehicle.Vehicle object
     :param model_df: the model dataframe
     """
-    if vehicle.battery and not vehicle.drivetrain.parallel:
+    if vehicle.battery.capacity and not vehicle.drivetrain.parallel:
         # Then, electrically driven pumps, etc.
         model_df["physical_demand_accessory"] = 0.0
 

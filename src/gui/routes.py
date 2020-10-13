@@ -69,8 +69,9 @@ def submit():
                 filtered_params[k][key] = val
 
     run_params = api.model_setup.basic_setup_from_web_api(filtered_params)
-    results = api.run_model(*run_params)
+    results = api.run_model(*run_params, output_result=True)
     return {"submitted_params": submitted_params, "filtered_params": filtered_params}
+
 
 @app.route("/updatescenario", methods=(["GET", "POST"]))
 def update():
@@ -91,7 +92,7 @@ def update():
             if val and key != "csrf_token":
                 filtered_params[k][key] = val
     response = {}
-    print('***', filtered_params)
+    print("***", filtered_params)
     if filtered_params:
         response = api.setup_alternate_model(filtered_params)
 

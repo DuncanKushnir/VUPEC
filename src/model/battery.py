@@ -3,6 +3,18 @@ from model.constants import *
 
 
 def process_battery_demand(global_parameters, vehicle, model_df):
+    if vehicle.battery:
+        soc, losses = [], []
+        batt = vehicle.battery_obj
+        for row in model_df.itertuples():
+            ett, lhb = batt.attempt_charge_change(row.energy_draw_battery * -1, 1)
+            soc.append(batt.soc)
+            losses.append(lhb)
+        model_df["soc"] = soc
+        model_df["loss_thermal_battery"] = losses
+
+    else:
+        model_df["soc"] = 0.0
     return model_df
 
 
@@ -11,8 +23,9 @@ def constant_eff(c_val, c_eff=0.95):
 
 
 class Battery:
-    def __init__(self, capacity_kwh, chemistry, ucl=0.9, lcl=0.1,
-                 efficiency_curve=None):
+    def __init__(
+        self, capacity_kwh, chemistry, ucl=0.9, lcl=0.1, efficiency_curve=None
+    ):
         """
         A tier 1 battery implementation that can use either a constant or varying
         efficiency curve to calculate internal soc changes and heat losses for

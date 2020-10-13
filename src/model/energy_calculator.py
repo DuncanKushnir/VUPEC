@@ -7,17 +7,18 @@ import os
 from model.vehicle import setup_vehicle, add_idle_behaviour
 from model.physics import add_external_physics
 from model.accessories import add_accessory_demands
-from model.drivetrain import allocate_demands
+from model.drivetrain import calculate_drivetrain_endpoints, add_constant_relations
 from model.battery import process_battery_demand
-from model.motors import apply_motor_efficiencies
+from model.refuel import apply_motor_efficiencies
 from model.labels import OUTPUT_DF_DESC
 from model.constants import *
 
 
 STANDARD_PIPELINE = [
     add_external_physics,
+    add_constant_relations,
     add_accessory_demands,
-    allocate_demands,
+    calculate_drivetrain_endpoints,
     process_battery_demand,
     apply_motor_efficiencies,
 ]
@@ -93,8 +94,10 @@ if __name__ == "__main__":
     start = pd.Timestamp.utcnow()
     from model.data import data
     from model.common import ObjDict
+    from model import mock_data
 
-    vehicle = data["vehicles"]["default"]
+    vehicle = mock_data.mock_data("volvo", "s60_twen")
+    vehicle = ObjDict.wrap_dict(vehicle["data"])
 
     parameters = {
         "simulate_wind": False,
@@ -104,7 +107,7 @@ if __name__ == "__main__":
         "temperature": 20,
     }
 
-    drive_cycle = data["drive_cycles"]["nedc"]
+    drive_cycle = data["drive_cycles"]["wltp-3b"]
     dc = drive_cycle.to_df()
 
     drive_cycle = dc
@@ -138,8 +141,3 @@ if __name__ == "__main__":
     for item in OUTPUT_DF_DESC:
         if item not in model.columns:
             print(f'"{item}": ("", ""),')
-
-    print(vehicle.to_json())
-    import json
-
-    print(json.dumps(parameters))

@@ -1,5 +1,6 @@
 import os
 import matplotlib.pyplot as plt
+from collections import defaultdict
 
 from model import state, data, model_setup, run
 from model.mock_data import mock_data
@@ -12,35 +13,44 @@ def get_manufacturer_list():
 
 
 def setup_model(manufacturer, model, drivecycle):
-    base_setup = {'manufacturer' :manufacturer,
-                  'model': model,
-                  'drivecycle': drivecycle}
+    base_setup = {
+        "manufacturer": manufacturer,
+        "model": model,
+        "drivecycle": drivecycle,
+    }
 
     model_setup.setup_base_vehicle(base_setup)
-    state.BASE_RESULT = run.single_pass(state.GLOBAL_PARAMS,
-                                        state.BASE_VEHICLE,
-                                        state.DRIVE_CYCLE)
+    state.BASE_RESULT = run.single_pass(
+        state.GLOBAL_PARAMS, state.BASE_VEHICLE, state.DRIVE_CYCLE
+    )
     result = mock_data(manufacturer, model)
-    result.update(run.extract_efficiencies(state.BASE_RESULT,
-                                           state.DRIVE_CYCLE))
+    result["data"] = flatten_vehicle_dict(result["data"])
+    result.update(run.extract_efficiencies(state.BASE_RESULT, state.DRIVE_CYCLE))
+    clearing_result = {}
+    for k, v in result["result"].items():
+        clearing_result[f"alt_{k}"] = v
+    result["result"].update(clearing_result)
     return result
+
 
 def setup_alternate_model(new_params):
     base_vehicle = state.BASE_VEHICLE.copy()
     model_setup.setup_scenario_vehicle(base_vehicle, new_params)
-    print('****', state.ALT_VEHICLE)
-    state.ALT_RESULT = run.single_pass(state.GLOBAL_PARAMS,
-                                       state.ALT_VEHICLE,
-                                       state.DRIVE_CYCLE)
+    print("****", state.ALT_VEHICLE)
+    state.ALT_RESULT = run.single_pass(
+        state.GLOBAL_PARAMS, state.ALT_VEHICLE, state.DRIVE_CYCLE
+    )
     result = {}
-    result.update(run.extract_efficiencies(state.ALT_RESULT,
-                                           state.DRIVE_CYCLE,
-                                           prefix='alt_'))
+    result.update(
+        run.extract_efficiencies(state.ALT_RESULT, state.DRIVE_CYCLE, prefix="alt_")
+    )
     return result
 
-def run_model(global_params, vehicles, drive_cycle):
+
+def run_model(global_params, vehicles, drive_cycle, output_result=False):
     print(global_params, vehicles, drive_cycle)
-    run.run(global_params, vehicles, drive_cycle)
+    run.run(global_params, vehicles, drive_cycle, output_result=output_result)
+
 
 def get_model_list(manufacturer):
     if manufacturer == "generic":
@@ -76,5 +86,19 @@ def get_basic_state():
     return basic_state
 
 
-def process_submit(submit_dict):
-    pass
+def flatten_vehicle_dict(vehicle, base_key=""):
+    result = {}
+    for k, v in vehicle.items():
+        if isinstance(v, dict):
+            result.update(flatten_vehicle_dict(v, base_key=f"{k}_"))
+        else:
+            result[k] = v
+    return result
+
+
+def inflate_vehicle_dict(vehicle):
+    result = defaultdict(dict)
+    for k, v in vehicle.items():
+        components = k.lsplit("_", 1)
+        result[components[0]][components[1]] = v
+    return result

@@ -131,7 +131,7 @@ def kinetic_energies(vehicle, v):
     tire_moment = vehicle.tires.moment
     tire_moment *= 4.0
     tire_kinetic = rotational_energy(tire_moment, vehicle.tires.diameter, v)
-    vehicle_kinetic = kinetic_energy(vehicle.mass, v)
+    vehicle_kinetic = kinetic_energy(vehicle.physical.mass, v)
     return tire_kinetic + vehicle_kinetic
 
 
@@ -144,15 +144,19 @@ def add_external_physics(global_params, vehicle, model_df):
     :param model_df: the dataframe with summary model information
     :return: the input model_df, modified in place
     """
-    mass = vehicle.mass
-    model_df["vehicle_mass"] = mass
+    mass = vehicle.physical.mass
+    # per tire slip torque
+    vehicle.physical.slip_torque = (mass * EARTH_G) * vehicle.tires.radius / 4
     model_df["air_density"] = air_density_alt_temp(model_df["avg_alt"])
-    model_df["loss_rolling"] = (
-        rolling_resistance_simple(model_df["vehicle_mass"]) * model_df["delta_d"]
-    )
+    model_df["loss_rolling"] = rolling_resistance_simple(mass) * model_df["delta_d"]
 
     model_df["loss_drag"] = (
-        aerodynamic_drag_average(model_df["avg_vv"], 2.5, 0.30, model_df["air_density"])
+        aerodynamic_drag_average(
+            model_df["avg_vv"],
+            vehicle.physical.cross_section,
+            vehicle.physical.coeff_drag,
+            model_df["air_density"],
+        )
         * model_df["delta_d"]
     )
     model_df["kinetic_start"] = kinetic_energies(vehicle, model_df["start_v"])
@@ -169,6 +173,7 @@ def add_external_physics(global_params, vehicle, model_df):
     model_df["power_wheel"] = model_df["energy_wheel"] / model_df["duration"]
     model_df["force_wheel"] = model_df["power_wheel"] / model_df["delta_d"]
     model_df["omega_wheel"] = model_df["avg_v"] / vehicle.tires.radius
-    model_df["torque_wheel"] = model_df["power_wheel"] / (model_df["omega_wheel"] * 4)
+    model_df["torque_wheel_total"] = model_df["power_wheel"] / model_df["omega_wheel"]
 
+    model_df.fillna(0.0, inplace=True)
     return model_df

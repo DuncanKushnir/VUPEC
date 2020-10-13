@@ -1,5 +1,6 @@
 import os
 
+
 def list_subfolders(path):
     """
     returns the subfolders of a given path

@@ -22,10 +22,10 @@ class SetupSubForm(FlaskForm):
 
 
 class PhysicalSubForm(FlaskForm):
-    mass = FloatField("Vehicle Mass", id="mass")
-    coeff_drag = FloatField("Drag Coefficient", id="coeff_drag")
-    cross_section = FloatField("Cross Section", id="cross_section")
-    coeff_rr = FloatField("Rolling Res. Coefficient", id="coeff_rr")
+    mass = FloatField("Vehicle Mass", id="physical_mass")
+    coeff_drag = FloatField("Drag Coefficient", id="physical_coeff_drag")
+    cross_section = FloatField("Cross Section", id="physical_cross_section")
+    coeff_rr = FloatField("Rolling Res. Coefficient", id="physical_coeff_rr")
     mass_base = None
     mass_unit = "kg"
     coeff_drag_base = None
@@ -37,7 +37,7 @@ class PhysicalSubForm(FlaskForm):
 
 
 class DrivetrainSubForm(FlaskForm):
-    fuel = FloatField("Fuel Type", id="fuel")
+    fuel = FloatField("Fuel Type", id="ff_engine_fuel")
 
 
 class AccessorySubForm(FlaskForm):
@@ -47,7 +47,7 @@ class AccessorySubForm(FlaskForm):
 
 
 class BatterySubForm(FlaskForm):
-    capacity = FloatField("Battery Capacity", id="batt_cap")
+    capacity = FloatField("Battery Capacity", id="battery_capacity")
     capacity_base = None
     capacity_unit = "kWh"
 

@@ -5,6 +5,8 @@ METER_INCH = 0.0254
 # Volume
 GALUS_L = 4.54609
 GALIMP_L = 3.7854
+# Gallons/hour in litres per second
+GALUS_H_L_S = 0.001052
 
 # Mass
 KG_LB = 2.2046

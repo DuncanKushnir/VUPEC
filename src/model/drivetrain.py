@@ -9,10 +9,29 @@ def source_energy(global_params, vehicle, model_df):
     Determines where the energy to drive the wheel will come from
     """
     wheel_energy_required_mask = model_df["energy_wheel"] > 0
-    energy_wheel = model_df.loc[wheel_energy_required_mask, "energy_wheel"]
+    model_df.loc[wheel_energy_required_mask, "energy_need_driveshaft"] = (
+        model_df.loc[wheel_energy_required_mask, "energy_wheel"]
+        / vehicle.drivetrain.eff_diff
+    )
 
-    if not vehicle.battery:
-        pass
+    model_df.loc[wheel_energy_required_mask, "energy_need_transmission"] = (
+        model_df.loc[wheel_energy_required_mask, "energy_need_driveshaft"]
+        / vehicle.drivetrain.eff_diff
+    )
+
+    if vehicle.battery and not vehicle.drivetrain.parallel:
+        model_df.loc[
+            wheel_energy_required_mask, "energy_need_electric_motor"
+        ] = model_df.loc[wheel_energy_required_mask, "energy_need_transmission"]
+        model_df.loc[wheel_energy_required_mask, "energy_need_battery"] = (
+            model_df.loc[wheel_energy_required_mask, "energy_need_electric_motor"]
+            / 0.92
+        )
+
+    else:
+        model_df.loc[wheel_energy_required_mask, "energy_need_ff_motor"] = model_df.loc[
+            wheel_energy_required_mask, "energy_need_transmission"
+        ]
 
     return model_df
 
@@ -21,18 +40,43 @@ def sink_energy(global_params, vehicle, model_df):
     """
     Determines how the excess wheel energy will be sunk
     """
-    wheel_energy_required_mask = model_df["energy_wheel"] < 0
-    energy_wheel = model_df.loc[wheel_energy_required_mask, "energy_wheel"]
+    wheel_energy_to_sink_mask = model_df["energy_wheel"] < 0
+    model_df["energy_to_sink"] = 0.0
+    model_df.loc[wheel_energy_to_sink_mask, "energy_to_sink"] = model_df.loc[
+        wheel_energy_to_sink_mask, "energy_wheel"
+    ]
 
     if not vehicle.battery:
-        pass
+        # First, energy needs of engine and accessories
+        model_df["loss_friction_brake"] = (
+            model_df["energy_to_sink"] + model_df["loss_friction_differential"]
+        ) * -1
 
     else:
-        # In this case, we are dealing with a vehicle that can not regen brake
-        pass
+        # In this case, we are dealing with a vehicle that can regen brake
+        model_df.loc[wheel_energy_to_sink_mask, "potential_regen_torque"] = (
+            model_df.loc[wheel_energy_to_sink_mask, "torque_per_drive_wheel"]
+            * vehicle.drivetrain.drive_n
+            / vehicle.drivetrain.final_ratio
+            * -1
+            * vehicle.drivetrain.eff_diff
+        )
 
-    # Now that we know the true demand on the brakes, we apply it.
-    model_df["loss_friction_brake"] = energy_wheel * -1
+        model_df["actual_regen_torque"] = model_df["potential_regen_torque"].apply(
+            lambda row: max(min(row - 10, 100.0), 0.0)
+        )
+
+        model_df["energy_brake_to_engine"] = (
+            model_df["actual_regen_torque"] * model_df["omega_driveshaft"]
+        )
+
+        model_df["energy_brake_to_battery"] = model_df["energy_brake_to_engine"] * 0.85
+
+        model_df["loss_friction_brake"] = (
+            model_df["energy_brake_to_battery"] + model_df["energy_to_sink"]
+        )
+
+        # Now that we know the true demand on the brakes, we apply it.
     return model_df
 
 
@@ -41,12 +85,12 @@ def idle(global_params, vehicle, model_df):
     Determines idling behaviour
     """
     idle_mask = model_df["energy_wheel"] == 0
-    energy_wheel = model_df.loc[idle_mask, "energy_wheel"]
-    model_df['engine_energy_idle'] = 0
-    model_df['engine_energy_idle'] += energy_wheel+300
-    if vehicle:
-        pass
+    model_df["energy_engine_idle"] = 0
 
+    if not vehicle.battery:
+        model_df.loc[idle_mask, "energy_engine_idle"] = 1000
+
+    model_df.fillna(0.0)
     return model_df
 
 
@@ -57,7 +101,6 @@ def from_wheels_to_driveshaft(global_params, vehicle, model_df):
         / vehicle.drivetrain.final_ratio
     )
     model_df["power_driveshaft"] = model_df["power_wheel"] / vehicle.drivetrain.eff_diff
-    model_df["omega_driveshaft"] = model_df["omega_wheel"] / vehicle.drivetrain.eff_diff
     return model_df
 
 
@@ -70,10 +113,49 @@ def from_driveshaft_to_engine(global_params, vehicle, model_df):
     return model_df
 
 
-def allocate_demands(global_params, vehicle, model_df):
+def allocate_torque(global_params, vehicle, model_df):
+
+    torque_d = model_df["torque_driveshaft"]
+    model_df["torque_brake"] = 0
+    model_df["power_brake"] = 0
+    if vehicle.battery_obj:
+        print("regen!")
+    else:
+        model_df["loss_friction_brake"] = model_df[model_df["energy_wheel"] < 0][
+            "energy_wheel"
+        ]
+
+    return model_df
+
+
+def add_constant_relations(global_params, vehicle, model_df):
+    """
+    Adds relationships that are always true
+    """
+    model_df["torque_per_drive_wheel"] = (
+        model_df["torque_wheel_total"] / vehicle.drivetrain.drive_n
+    )
+    model_df["omega_driveshaft"] = (
+        model_df["omega_wheel"] * vehicle.drivetrain.final_ratio
+    )
+    model_df["loss_friction_differential"] = abs(model_df["energy_wheel"]) * (
+        1 - vehicle.drivetrain.eff_diff
+    )
+
+    return model_df
+
+
+def calculate_drivetrain_endpoints(global_params, vehicle, model_df):
     """
     Determines the direction and magnitude of component energy flows
     """
+    # Because we operate on slices, we initialize columns
+    model_df["energy_need_driveshaft"] = 0.0
+    model_df["energy_need_transmission"] = 0.0
+    model_df["energy_need_electric_motor"] = 0.0
+    model_df["energy_need_ff_motor"] = 0.0
+    model_df["energy_draw_battery"] = 0.0
+
     # First, we need to know if the engine is already loaded, e.g. driving the
     # alternator, running belt driven pumps, etc. This will be handled in the
     # pipeline with the accessory_demand function.
@@ -82,37 +164,19 @@ def allocate_demands(global_params, vehicle, model_df):
     model_df = sink_energy(global_params, vehicle, model_df)
     model_df = idle(global_params, vehicle, model_df)
 
-    # The previous three functions operate on slices of model_df
-    model_df = from_wheels_to_driveshaft(global_params, vehicle, model_df)
-    model_df = from_driveshaft_to_engine(global_params, vehicle, model_df)
-    model_df = allocate_torque(global_params, vehicle, model_df)
+    model_df.fillna(0.0, inplace=True)
 
-    # If not an electric, then accessory power comes from an alternator
-    if not vehicle.battery:
-        model_df["energy_engine_alternator"] = (
-            model_df["electric_demand_accessory"] / 0.78
-        )
-    else:
-        model_df["energy_engine_alternator"] = 0
-
-    model_df["energy_from_engine"] = (
-        model_df["energy_engine_alternator"] +
-        model_df[model_df["energy_engine_driveshaft"] > 0]["energy_engine_driveshaft"]
+    model_df["energy_from_ff_motor"] = (
+        model_df["energy_need_ff_motor"]
+        + model_df["energy_engine_idle"]
+        + model_df["physical_demand_accessory"]
     )
 
-    return model_df
-
-
-def allocate_torque(global_params, vehicle, model_df):
-
-    torque_d = model_df["torque_driveshaft"]
-    model_df["torque_brake"] = 0
-    model_df["power_brake"] = 0
-    if vehicle.has_regen:
-        print("regen!")
-    else:
-        model_df["loss_friction_brake"] = model_df[model_df["energy_wheel"] < 0][
-            "energy_wheel"
-        ]
+    if vehicle.battery:
+        model_df["energy_draw_battery"] = (
+            model_df["remaining_el_need_accessory"]
+            + model_df["energy_need_electric_motor"] / 0.92
+            + model_df["energy_brake_to_battery"] * -1
+        )
 
     return model_df

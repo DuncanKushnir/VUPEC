@@ -12,6 +12,12 @@ def belt_connected_accessories(global_params, vehicle, model_df):
     :param vehicle: a vehicle.Vehicle object
     :param model_df: the model dataframe
     """
+    if vehicle.battery and not vehicle.drivetrain.parallel:
+        # Then, electrically driven pumps, etc.
+        model_df["physical_demand_accessory"] = 0.0
+
+    else:
+        model_df["physical_demand_accessory"] = 0.0
 
     return model_df
 
@@ -24,9 +30,18 @@ def electric_connected_accessories(global_params, vehicle, model_df):
     :param vehicle: a vehicle.Vehicle object
     :param model_df: the model dataframe
     """
-    static_accessories = vehicle.accessory_base * model_df["duration"]
-
+    static_accessories = vehicle.accessory.base * model_df["duration"]
     model_df["electric_demand_accessory"] = static_accessories
+
+    # If not an electric, then accessory power comes from an alternator
+    if not vehicle.battery:
+        model_df["energy_engine_alternator"] = (
+            model_df["electric_demand_accessory"] / 0.78
+        )
+        model_df["remaining_el_need_accessory"] = 0.0
+    else:
+        model_df["energy_engine_alternator"] = 0.0
+        model_df["remaining_el_need_accessory"] = model_df["electric_demand_accessory"]
 
     return model_df
 

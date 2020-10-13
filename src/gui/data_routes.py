@@ -28,7 +28,7 @@ def set_base_model(manufacturer, model, drivecycle):
     data_params = api.setup_model(manufacturer, model, drivecycle)
     base_params = {
         "data": {key + "_base": val for key, val in data_params["data"].items()},
-        "result": data_params['result']
+        "result": data_params["result"],
     }
     base_params["orig"] = data_params["data"]
     return json.dumps(base_params)

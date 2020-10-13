@@ -17,7 +17,7 @@ def belt_connected_accessories(global_params, vehicle, model_df):
         model_df["physical_demand_accessory"] = 0.0
 
     else:
-        model_df["physical_demand_accessory"] = 0.0
+        model_df["physical_demand_accessory"] = model_df['motor_rpm'] / 3
 
     return model_df
 
@@ -57,6 +57,7 @@ def add_accessory_demands(global_params, vehicle, model_df):
     :return: the input model_df, modified in place
     """
     model_df = electric_connected_accessories(global_params, vehicle, model_df)
-    model_df = belt_connected_accessories(global_params, vehicle, model_df)
+    # This is calculated_later
+    #model_df = belt_connected_accessories(global_params, vehicle, model_df)
 
     return model_df

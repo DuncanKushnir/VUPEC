@@ -1,4 +1,3 @@
-from model import physics
 from model.data import data
 from model.tires import parse_tire_string
 from model.battery import Battery
@@ -26,6 +25,3 @@ def setup_vehicle(global_params, vehicle):
 
     return vehicle
 
-
-def add_idle_behaviour(vehicle, drive_cycle):
-    pass

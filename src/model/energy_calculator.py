@@ -4,7 +4,7 @@ Calculates the energy requirement for driving
 import pandas as pd
 import os
 
-from model.vehicle import setup_vehicle, add_idle_behaviour
+from model.vehicle import setup_vehicle
 from model.physics import add_external_physics
 from model.accessories import add_accessory_demands
 from model.drivetrain import calculate_drivetrain_endpoints, add_constant_relations
@@ -96,7 +96,7 @@ if __name__ == "__main__":
     from model.common import ObjDict
     from model import mock_data
 
-    vehicle = mock_data.mock_data("volvo", "s60_twen")
+    vehicle = mock_data.mock_data("volvo", "s60")
     vehicle = ObjDict.wrap_dict(vehicle["data"])
 
     parameters = {

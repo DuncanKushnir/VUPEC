@@ -4,6 +4,9 @@ locations in the drive train
 """
 import math
 
+from model.accessories import belt_connected_accessories
+
+
 def source_energy(global_params, vehicle, model_df):
     """
     Determines where the energy to drive the wheel will come from
@@ -24,11 +27,13 @@ def source_energy(global_params, vehicle, model_df):
             wheel_energy_required_mask, "energy_need_electric_motor"
         ] = model_df.loc[wheel_energy_required_mask, "energy_need_transmission"]
 
-        model_df['el_motor_instant_efficiency'] = 0.
-        model_df.loc[wheel_energy_required_mask, 'el_motor_instant_efficiency'] = \
-            vehicle.el_motor.obj.instant_efficiencies(
-                model_df.loc[wheel_energy_required_mask, 'torque_driveshaft'],
-                model_df.loc[wheel_energy_required_mask, 'omega_driveshaft_rpm'])
+        model_df["el_motor_instant_efficiency"] = 0.0
+        model_df.loc[
+            wheel_energy_required_mask, "el_motor_instant_efficiency"
+        ] = vehicle.el_motor.obj.instant_efficiencies(
+            model_df.loc[wheel_energy_required_mask, "torque_driveshaft"],
+            model_df.loc[wheel_energy_required_mask, "omega_driveshaft_rpm"],
+        )
 
         model_df.loc[wheel_energy_required_mask, "energy_need_battery"] = (
             model_df.loc[wheel_energy_required_mask, "energy_need_electric_motor"]
@@ -96,8 +101,56 @@ def idle(global_params, vehicle, model_df):
 
     if not vehicle.battery:
         model_df.loc[idle_mask, "energy_engine_idle"] = 1000
+        model_df.loc[idle_mask, "motor_rpm"] = 800
 
     model_df.fillna(0.0)
+    return model_df
+
+
+def account_startup_clutch(global_params, vehicle, model_df):
+    model_df["clutch_slip"] = 1
+    low_rpm_mask = model_df["motor_rpm"] < 200
+    model_df.loc[low_rpm_mask, "clutch_slip"] = (
+        model_df.loc[low_rpm_mask, "motor_rpm"] / 200
+    )
+    model_df.loc[low_rpm_mask, "motor_rpm"] = 200
+    return model_df
+
+
+def account_accel_ineff(global_params, vehicle, model_df):
+    model_df["accel_eff"] = 1
+    accel_mask = model_df["segment_type"] == "a"
+    model_df.loc[accel_mask, "accel_eff"] = 1 / (
+        model_df.loc[accel_mask, "acceleration"] / model_df.loc[accel_mask, "avg_v"] + 1
+    )
+    return model_df
+
+
+def finish_ff_calculation(global_params, vehicle, model_df):
+
+    model_df = belt_connected_accessories(global_params, vehicle, model_df)
+
+    model_df["energy_from_ff_motor"] = (
+        model_df["energy_need_ff_motor"]
+        / (model_df["clutch_slip"] * model_df["accel_eff"])
+        + model_df["energy_engine_idle"]
+        + model_df["physical_demand_accessory"]
+    )
+    model_df["total_torque_motor"] = model_df["energy_from_ff_motor"] / (
+        model_df["motor_rpm"] / 60 * 2 * math.pi
+    )
+
+    model_df["ff_motor_instant_efficiency"] = 0.0
+    model_df["ff_motor_instant_efficiency"] = vehicle.ff_motor.obj.instant_efficiencies(
+        model_df["total_torque_motor"], model_df["motor_rpm"]
+    )
+
+    model_df["thermal_input_ff_motor"] = (
+        model_df["energy_from_ff_motor"] / model_df["ff_motor_instant_efficiency"]
+    )
+    model_df['loss_thermal_motor'] = model_df['thermal_input_ff_motor'] - model_df[
+        'energy_from_ff_motor']
+
     return model_df
 
 
@@ -114,9 +167,7 @@ def add_constant_relations(global_params, vehicle, model_df):
     model_df["omega_driveshaft"] = (
         model_df["omega_wheel"] * vehicle.drivetrain.final_ratio
     )
-    model_df["omega_driveshaft_rpm"] = (
-        model_df["omega_driveshaft"] * 60 / (2*math.pi)
-    )
+    model_df["omega_driveshaft_rpm"] = model_df["omega_driveshaft"] * 60 / (2 * math.pi)
     model_df["loss_friction_differential"] = abs(model_df["energy_wheel"]) * (
         1 - vehicle.drivetrain.eff_diff
     )
@@ -134,6 +185,7 @@ def calculate_drivetrain_endpoints(global_params, vehicle, model_df):
     model_df["energy_need_electric_motor"] = 0.0
     model_df["energy_need_ff_motor"] = 0.0
     model_df["energy_draw_battery"] = 0.0
+    model_df["motor_rpm"] = model_df["omega_driveshaft_rpm"]
 
     # First, we need to know if the engine is already loaded, e.g. driving the
     # alternator, running belt driven pumps, etc. This will be handled in the
@@ -145,11 +197,9 @@ def calculate_drivetrain_endpoints(global_params, vehicle, model_df):
 
     model_df.fillna(0.0, inplace=True)
 
-    model_df["energy_from_ff_motor"] = (
-        model_df["energy_need_ff_motor"]
-        + model_df["energy_engine_idle"]
-        + model_df["physical_demand_accessory"]
-    )
+    model_df = account_startup_clutch(global_params, vehicle, model_df)
+    model_df = account_accel_ineff(global_params, vehicle, model_df)
+    model_df = finish_ff_calculation(global_params, vehicle, model_df)
 
     if vehicle.battery:
         model_df["energy_draw_inverter"] = (

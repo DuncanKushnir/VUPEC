@@ -148,8 +148,9 @@ def finish_ff_calculation(global_params, vehicle, model_df):
     model_df["thermal_input_ff_motor"] = (
         model_df["energy_from_ff_motor"] / model_df["ff_motor_instant_efficiency"]
     )
-    model_df['loss_thermal_motor'] = model_df['thermal_input_ff_motor'] - model_df[
-        'energy_from_ff_motor']
+    model_df["loss_thermal_motor"] = (
+        model_df["thermal_input_ff_motor"] - model_df["energy_from_ff_motor"]
+    )
 
     return model_df
 

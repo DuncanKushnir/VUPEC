@@ -6,8 +6,7 @@ MOCK_DRIVETRAIN = {
     "eff_inverter": 0.95,
 }
 
-MOCK_FF_MOTOR = {"power": 200,
-                 "max_torque": 300}
+MOCK_FF_MOTOR = {"power": 200, "max_torque": 300}
 
 MOCK_EL_MOTOR = {}
 
@@ -16,7 +15,6 @@ MOCK_TIRES = {"size": "P255/65R16"}
 MOCK_ACCESSORIES = {"base": 100}
 
 MOCK_BATTERY = {"capacity": 0}
-
 
 
 def mock_data(manufacturer, model):
@@ -90,8 +88,7 @@ def mock_data(manufacturer, model):
                     "drivetrain": MOCK_DRIVETRAIN,
                     "tires": MOCK_TIRES,
                     "ff_motor": MOCK_FF_MOTOR,
-                    "el_motor": {"power" : 65,
-                                 "max_torque": 250},
+                    "el_motor": {"power": 65, "max_torque": 250},
                 }
             }
 
@@ -127,8 +124,7 @@ def mock_data(manufacturer, model):
                     "drivetrain": MOCK_DRIVETRAIN,
                     "tires": MOCK_TIRES,
                     "ff_motor": MOCK_FF_MOTOR,
-                    "el_motor": {"power": 65,
-                                 "max_torque": 250},
+                    "el_motor": {"power": 65, "max_torque": 250},
                 }
             }
 

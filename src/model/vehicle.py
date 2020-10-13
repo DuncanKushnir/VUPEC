@@ -24,4 +24,3 @@ def setup_vehicle(global_params, vehicle):
         vehicle.ff_motor.obj = PetrolMotor()
 
     return vehicle
-

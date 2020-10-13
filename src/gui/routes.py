@@ -71,10 +71,10 @@ def submit():
 
     run_params = api.model_setup.basic_setup_from_web_api(filtered_params)
     results = api.run_model(*run_params, output_result=True)
-    #return {"submitted_params": submitted_params, "filtered_params": filtered_params}
-    flash('Success!  Model saved in output folder')
+    # return {"submitted_params": submitted_params, "filtered_params": filtered_params}
+    flash("Success!  Model saved in output folder")
 
-    return redirect('/')
+    return redirect("/")
 
 
 @app.route("/updatescenario", methods=(["GET", "POST"]))

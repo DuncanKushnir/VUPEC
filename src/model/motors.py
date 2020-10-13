@@ -5,19 +5,20 @@ class Motor:
             for (torque, rpm) in zip(torque_series, rpm_series)
         ]
 
+
 class ElectricMotor(Motor):
     def __init__(
-            self,
-            eff_peak=0.94,
-            rpm_plateau_start=2200,
-            rpm_plateau_end=4000,
-            torque_plateau_start=50,
-            torque_plateau_end=150,
-            eff_rpm_0=0.70,
-            eff_rpm_8000=0.75,
-            eff_torque_0=0.91,
-            eff_torque_dropoff=0.25,
-            **kwargs
+        self,
+        eff_peak=0.94,
+        rpm_plateau_start=2200,
+        rpm_plateau_end=4000,
+        torque_plateau_start=50,
+        torque_plateau_end=150,
+        eff_rpm_0=0.70,
+        eff_rpm_8000=0.75,
+        eff_torque_0=0.91,
+        eff_torque_dropoff=0.25,
+        **kwargs
     ):
         self.eff_peak = eff_peak
         self.rpm_plateau_start = rpm_plateau_start
@@ -42,12 +43,16 @@ class ElectricMotor(Motor):
             eff_rpm = self.eff_peak
 
         if torque < self.torque_plateau_start:
-            eff_torque = self.eff_torque_0 + ((1-self.eff_torque_0) * torque /
-                                              self.torque_plateau_start)
+            eff_torque = self.eff_torque_0 + (
+                (1 - self.eff_torque_0) * torque / self.torque_plateau_start
+            )
 
         elif torque > self.torque_plateau_end:
-            eff_torque = 1 - (self.eff_torque_dropoff * (torque-self.torque_plateau_end) /
-                              self.torque_plateau_end)
+            eff_torque = 1 - (
+                self.eff_torque_dropoff
+                * (torque - self.torque_plateau_end)
+                / self.torque_plateau_end
+            )
         else:
             eff_torque = 1
 
@@ -56,17 +61,17 @@ class ElectricMotor(Motor):
 
 class PetrolMotor(Motor):
     def __init__(
-            self,
-            eff_peak=0.31,
-            rpm_plateau_start=1800,
-            rpm_plateau_end=2000,
-            torque_plateau_start=50,
-            torque_plateau_end=150,
-            eff_rpm_0=0.05,
-            eff_rpm_8000=0.25,
-            eff_torque_0=0.5,
-            eff_torque_dropoff=0.35,
-            **kwargs
+        self,
+        eff_peak=0.31,
+        rpm_plateau_start=1800,
+        rpm_plateau_end=2000,
+        torque_plateau_start=50,
+        torque_plateau_end=150,
+        eff_rpm_0=0.05,
+        eff_rpm_8000=0.25,
+        eff_torque_0=0.5,
+        eff_torque_dropoff=0.35,
+        **kwargs
     ):
         self.eff_peak = eff_peak
         self.rpm_plateau_start = rpm_plateau_start
@@ -91,12 +96,16 @@ class PetrolMotor(Motor):
             eff_rpm = self.eff_peak
 
         if torque < self.torque_plateau_start:
-            eff_torque = self.eff_torque_0 + ((1-self.eff_torque_0) * torque /
-                                              self.torque_plateau_start)
+            eff_torque = self.eff_torque_0 + (
+                (1 - self.eff_torque_0) * torque / self.torque_plateau_start
+            )
 
         elif torque > self.torque_plateau_end:
-            eff_torque = 1 - (self.eff_torque_dropoff * (torque-self.torque_plateau_end) /
-                              self.torque_plateau_end)
+            eff_torque = 1 - (
+                self.eff_torque_dropoff
+                * (torque - self.torque_plateau_end)
+                / self.torque_plateau_end
+            )
         else:
             eff_torque = 1
 

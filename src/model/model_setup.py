@@ -2,12 +2,9 @@
 Default parameters for various parts
 """
 import datetime
-import copy
 
 from model.common import ObjDict
-from model.battery import Battery
 from model.data import data
-from model.config import *
 from model import api, state
 
 

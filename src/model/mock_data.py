@@ -3,13 +3,20 @@ MOCK_DRIVETRAIN = {
     "drive_n": 2,
     "eff_diff": 0.98,
     "parallel": False,
+    "eff_inverter": 0.95,
 }
+
+MOCK_FF_MOTOR = {"power": 200,
+                 "max_torque": 300}
+
+MOCK_EL_MOTOR = {}
 
 MOCK_TIRES = {"size": "P255/65R16"}
 
 MOCK_ACCESSORIES = {"base": 100}
 
 MOCK_BATTERY = {}
+
 
 
 def mock_data(manufacturer, model):
@@ -27,6 +34,8 @@ def mock_data(manufacturer, model):
                     "battery": MOCK_BATTERY,
                     "drivetrain": MOCK_DRIVETRAIN,
                     "tires": MOCK_TIRES,
+                    "ff_motor": MOCK_FF_MOTOR,
+                    "el_motor": MOCK_EL_MOTOR,
                 }
             }
 
@@ -43,6 +52,8 @@ def mock_data(manufacturer, model):
                     "battery": MOCK_BATTERY,
                     "drivetrain": MOCK_DRIVETRAIN,
                     "tires": MOCK_TIRES,
+                    "ff_motor": MOCK_FF_MOTOR,
+                    "el_motor": MOCK_EL_MOTOR,
                 }
             }
 
@@ -60,6 +71,8 @@ def mock_data(manufacturer, model):
                     "battery": MOCK_BATTERY,
                     "drivetrain": MOCK_DRIVETRAIN,
                     "tires": MOCK_TIRES,
+                    "ff_motor": MOCK_FF_MOTOR,
+                    "el_motor": MOCK_EL_MOTOR,
                 }
             }
 
@@ -76,6 +89,9 @@ def mock_data(manufacturer, model):
                     "battery": {"capacity": 11.6},
                     "drivetrain": MOCK_DRIVETRAIN,
                     "tires": MOCK_TIRES,
+                    "ff_motor": MOCK_FF_MOTOR,
+                    "el_motor": {"power" : 65,
+                                 "max_torque": 250},
                 }
             }
 
@@ -92,6 +108,8 @@ def mock_data(manufacturer, model):
                     "battery": MOCK_BATTERY,
                     "drivetrain": MOCK_DRIVETRAIN,
                     "tires": MOCK_TIRES,
+                    "ff_motor": MOCK_FF_MOTOR,
+                    "el_motor": MOCK_EL_MOTOR,
                 }
             }
 
@@ -108,6 +126,8 @@ def mock_data(manufacturer, model):
                     "battery": {"capacity": 11.6},
                     "drivetrain": MOCK_DRIVETRAIN,
                     "tires": MOCK_TIRES,
+                    "el_motor": {"power": 65,
+                                 "max_torque": 250},
                 }
             }
 

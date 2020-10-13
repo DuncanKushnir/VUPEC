@@ -122,13 +122,28 @@ if __name__ == "__main__":
     print(model["energy_from_engine"].sum(), "J from engine at brake")
 
     print(model.head())
+    print(drive_cycle.delta_d.sum(), 'kilometers driven')
 
     print("Cycle Economy\n*******************")
     print("petrol:")
     cycle_economy = model["input_petrol"].sum() * 100 * 1000 / drive_cycle.delta_d.sum()
     print("cycle_economy:", cycle_economy, "L/100km")
     cycle_economym = GALUS_L / (cycle_economy / 100 * MILE_KM)
-    print("cycle_economy:", cycle_economym, "mpg")
+    print("cycle_economy:", cycle_economym, "mpg\n")
+    if "el_input_total" in model.columns:
+        el_economy = (
+            model["el_input_total"][0]
+            * 100
+            * 1000
+            / drive_cycle.delta_d.sum()
+            / KWH_J
+        )
+    print("electricity:")
+    print(el_economy, 'kWh/ 100km')
+    print(el_economy*3.6/PETROL_LHV ,'in L/100km for those who do that\n')
+    print('----------------------------------------')
+    print(el_economy*3.6/PETROL_LHV+cycle_economy, 'L/100km total\n')
+
     end = pd.Timestamp.utcnow()
     print((end - start).total_seconds(), "total seconds")
 

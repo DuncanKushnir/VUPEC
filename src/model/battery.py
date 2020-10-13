@@ -4,6 +4,7 @@ from model.constants import *
 
 def process_battery_demand(global_parameters, vehicle, model_df):
     if vehicle.battery:
+        model_df = process_inverter(global_parameters, vehicle, model_df)
         soc, losses = [], []
         batt = vehicle.battery_obj
         for row in model_df.itertuples():
@@ -15,6 +16,27 @@ def process_battery_demand(global_parameters, vehicle, model_df):
 
     else:
         model_df["soc"] = 0.0
+    return model_df
+
+def process_inverter(global_parameters, vehicle, model_df):
+    energy_in_mask = model_df['energy_draw_inverter'] <= 0.0
+    energy_out_mask = model_df['energy_draw_inverter'] > 0.0
+    model_df['energy_draw_battery'] = 0
+    model_df['loss_thermal_inverter'] = 0
+
+    model_df.loc[energy_in_mask, 'energy_draw_battery'] = \
+        model_df.loc[energy_in_mask, 'energy_draw_inverter'] * \
+        vehicle.drivetrain.eff_inverter
+    model_df.loc[energy_in_mask, 'loss_thermal_inverter'] = \
+        model_df.loc[energy_in_mask, 'energy_draw_inverter'] * \
+        (1- vehicle.drivetrain.eff_inverter) *-1
+
+    model_df.loc[energy_out_mask, 'energy_draw_battery'] = \
+            model_df.loc[energy_out_mask, 'energy_draw_inverter'] / \
+            vehicle.drivetrain.eff_inverter
+    model_df.loc[energy_out_mask, 'loss_thermal_inverter'] = \
+        model_df.loc[energy_out_mask, 'energy_draw_battery'] * \
+        (1- vehicle.drivetrain.eff_inverter)
     return model_df
 
 

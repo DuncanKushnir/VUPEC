@@ -2,7 +2,7 @@
 Organizes and calculates the conversion of various energy types between different
 locations in the drive train
 """
-
+import math
 
 def source_energy(global_params, vehicle, model_df):
     """
@@ -23,9 +23,16 @@ def source_energy(global_params, vehicle, model_df):
         model_df.loc[
             wheel_energy_required_mask, "energy_need_electric_motor"
         ] = model_df.loc[wheel_energy_required_mask, "energy_need_transmission"]
+
+        model_df['el_motor_instant_efficiency'] = 0.
+        model_df.loc[wheel_energy_required_mask, 'el_motor_instant_efficiency'] = \
+            vehicle.el_motor.obj.instant_efficiencies(
+                model_df.loc[wheel_energy_required_mask, 'torque_driveshaft'],
+                model_df.loc[wheel_energy_required_mask, 'omega_driveshaft_rpm'])
+
         model_df.loc[wheel_energy_required_mask, "energy_need_battery"] = (
             model_df.loc[wheel_energy_required_mask, "energy_need_electric_motor"]
-            / 0.92
+            / model_df.loc[wheel_energy_required_mask, "el_motor_instant_efficiency"]
         )
 
     else:
@@ -50,7 +57,7 @@ def sink_energy(global_params, vehicle, model_df):
         # First, energy needs of engine and accessories
         model_df["loss_friction_brake"] = (
             model_df["energy_to_sink"] + model_df["loss_friction_differential"]
-        ) * -1
+        )
 
     else:
         # In this case, we are dealing with a vehicle that can regen brake
@@ -63,7 +70,7 @@ def sink_energy(global_params, vehicle, model_df):
         )
 
         model_df["actual_regen_torque"] = model_df["potential_regen_torque"].apply(
-            lambda row: max(min(row - 10, 100.0), 0.0)
+            lambda row: max(min(row - 15, 100.0), 0.0)
         )
 
         model_df["energy_brake_to_engine"] = (
@@ -94,40 +101,6 @@ def idle(global_params, vehicle, model_df):
     return model_df
 
 
-def from_wheels_to_driveshaft(global_params, vehicle, model_df):
-    model_df["torque_driveshaft"] = (
-        model_df["torque_wheel"]
-        * vehicle.drivetrain.drive_n
-        / vehicle.drivetrain.final_ratio
-    )
-    model_df["power_driveshaft"] = model_df["power_wheel"] / vehicle.drivetrain.eff_diff
-    return model_df
-
-
-def from_driveshaft_to_engine(global_params, vehicle, model_df):
-    model_df["power_engine_driveshaft"] = model_df["power_driveshaft"] / 0.98
-    model_df["energy_engine_driveshaft"] = (
-        model_df["power_engine_driveshaft"] * model_df["duration"]
-    )
-    model_df["torque_engine_driveshaft"] = model_df["torque_driveshaft"] / 0.98
-    return model_df
-
-
-def allocate_torque(global_params, vehicle, model_df):
-
-    torque_d = model_df["torque_driveshaft"]
-    model_df["torque_brake"] = 0
-    model_df["power_brake"] = 0
-    if vehicle.battery_obj:
-        print("regen!")
-    else:
-        model_df["loss_friction_brake"] = model_df[model_df["energy_wheel"] < 0][
-            "energy_wheel"
-        ]
-
-    return model_df
-
-
 def add_constant_relations(global_params, vehicle, model_df):
     """
     Adds relationships that are always true
@@ -135,8 +108,14 @@ def add_constant_relations(global_params, vehicle, model_df):
     model_df["torque_per_drive_wheel"] = (
         model_df["torque_wheel_total"] / vehicle.drivetrain.drive_n
     )
+    model_df["torque_driveshaft"] = (
+        model_df["torque_wheel_total"] / vehicle.drivetrain.final_ratio
+    )
     model_df["omega_driveshaft"] = (
         model_df["omega_wheel"] * vehicle.drivetrain.final_ratio
+    )
+    model_df["omega_driveshaft_rpm"] = (
+        model_df["omega_driveshaft"] * 60 / (2*math.pi)
     )
     model_df["loss_friction_differential"] = abs(model_df["energy_wheel"]) * (
         1 - vehicle.drivetrain.eff_diff
@@ -173,9 +152,9 @@ def calculate_drivetrain_endpoints(global_params, vehicle, model_df):
     )
 
     if vehicle.battery:
-        model_df["energy_draw_battery"] = (
+        model_df["energy_draw_inverter"] = (
             model_df["remaining_el_need_accessory"]
-            + model_df["energy_need_electric_motor"] / 0.92
+            + model_df["energy_need_battery"]
             + model_df["energy_brake_to_battery"] * -1
         )
 

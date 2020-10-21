@@ -1,5 +1,8 @@
 import os
-import matplotlib.pyplot as plt
+try:
+    import matplotlib.pyplot as plt
+except:
+    pass
 from collections import defaultdict
 
 from model import state, data, model_setup, run
@@ -65,10 +68,13 @@ def get_drivecycle_list():
 def update_drivecycle_image(drive_cycle_df, dc_name):
     image_path = os.path.join(GUI_STATIC_DIR, f"{dc_name}.png")
     if not os.path.exists(image_path):
-        print("Generating image", image_path)
-        drive_cycle_df.plot(x="start_time", y="start_v")
-        plt.margins(0)
-        plt.savefig(image_path)
+        try:
+            print("Generating image", image_path)
+            drive_cycle_df.plot(x="start_time", y="start_v")
+            plt.margins(0)
+            plt.savefig(image_path)
+        except:
+            pass
 
 
 def change_drivecycle(drive_cycle_name):

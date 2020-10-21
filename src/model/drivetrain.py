@@ -56,9 +56,9 @@ def sink_energy(global_params, vehicle, model_df):
     model_df["energy_to_sink"] = 0.0
     model_df.loc[wheel_energy_to_sink_mask, "energy_to_sink"] = model_df.loc[
         wheel_energy_to_sink_mask, "energy_wheel"
-    ]
+    ] * -1
 
-    if not vehicle.battery:
+    if not vehicle.battery.capacity:
         # First, energy needs of engine and accessories
         model_df["loss_friction_brake"] = (
             model_df["energy_to_sink"] + model_df["loss_friction_differential"]
@@ -85,7 +85,7 @@ def sink_energy(global_params, vehicle, model_df):
         model_df["energy_brake_to_battery"] = model_df["energy_brake_to_engine"] * 0.85
 
         model_df["loss_friction_brake"] = (
-            model_df["energy_brake_to_battery"] + model_df["energy_to_sink"]
+            model_df["energy_to_sink"] - model_df["energy_brake_to_battery"]
         )
 
         # Now that we know the true demand on the brakes, we apply it.
@@ -99,7 +99,7 @@ def idle(global_params, vehicle, model_df):
     idle_mask = model_df["energy_wheel"] == 0
     model_df["energy_engine_idle"] = 0
 
-    if not vehicle.battery:
+    if not vehicle.battery.capacity:
         model_df.loc[idle_mask, "energy_engine_idle"] = 1000
         model_df.loc[idle_mask, "motor_rpm"] = 800
 
@@ -188,16 +188,14 @@ def calculate_drivetrain_endpoints(global_params, vehicle, model_df):
     model_df["energy_draw_battery"] = 0.0
     model_df["motor_rpm"] = model_df["omega_driveshaft_rpm"]
 
-    # First, we need to know if the engine is already loaded, e.g. driving the
-    # alternator, running belt driven pumps, etc. This will be handled in the
-    # pipeline with the accessory_demand function.
-
+    # Different calculations depending on which way energy is flowing
     model_df = source_energy(global_params, vehicle, model_df)
     model_df = sink_energy(global_params, vehicle, model_df)
     model_df = idle(global_params, vehicle, model_df)
 
     model_df.fillna(0.0, inplace=True)
 
+    # Many possible inefficiencies in combustion engines
     model_df = account_startup_clutch(global_params, vehicle, model_df)
     model_df = account_accel_ineff(global_params, vehicle, model_df)
     model_df = finish_ff_calculation(global_params, vehicle, model_df)

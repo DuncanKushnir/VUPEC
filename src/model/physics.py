@@ -42,7 +42,7 @@ def air_density_alt_temp(altitude=0, temperature=AIR_TEMP_ISA):
 
 def aerodynamic_drag_instant(v, A, cd, rho=AIR_DENS_ISA):
     """
-    F = 1/2 * ? * v? * A * cd
+    F = 1/2 * rho * v2 * A * cd
     :param v: the force due to drag
     :param A: the cross sectional area
     :param cd: the coefficient of drag
@@ -55,7 +55,7 @@ def aerodynamic_drag_instant(v, A, cd, rho=AIR_DENS_ISA):
 
 def aerodynamic_drag_average(vv, A, cd, rho=AIR_DENS_ISA):
     """
-    F = 1/2 * ? * vv * A * cd
+    F = 1/2 * rho * vv * A * cd
     :param vv: the average square of the velocity in meters/second
     :param A: the cross sectional area in meters squared
     :param cd: the coefficient of drag

@@ -34,7 +34,7 @@ def electric_connected_accessories(global_params, vehicle, model_df):
     model_df["electric_demand_accessory"] = static_accessories
 
     # If not an electric, then accessory power comes from an alternator
-    if not vehicle.battery:
+    if not vehicle.battery.capacity:
         model_df["energy_engine_alternator"] = (
             model_df["electric_demand_accessory"] / 0.78
         )

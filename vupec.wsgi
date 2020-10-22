@@ -15,4 +15,8 @@ with open(activate_this) as file_:
 sys.path.insert(0, src_dir)
 sys.path.append(this_dir)
 
+print("Running on python", sys.version)
+print("Interpreter", sys.executable)
+print("Set up with source dir", src_dir)
+
 from gui.app import app as application

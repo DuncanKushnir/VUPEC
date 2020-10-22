@@ -21,7 +21,7 @@ def run(suppress_output=False, override_host=False, override_port=False, serve=F
     host = override_host if override_host else cfg.DEFAULT_HOST
     port = override_port if override_port else cfg.DEFAULT_PORT
     if serve:
-        print(f"Running on {host}:{port}")
+        print("Running on {}:{}".format(host,port))
         app.run(host=host, port=port, debug=True)
     else:
         app.run()

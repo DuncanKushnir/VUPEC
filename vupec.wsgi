@@ -15,4 +15,4 @@ with open(activate_this) as file_:
 sys.path.insert(0, src_dir)
 sys.path.append(this_dir)
 
-from src.gui.app import app as application
+from gui.app import app as application

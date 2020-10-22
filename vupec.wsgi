@@ -15,6 +15,7 @@ with open(activate_this) as file_:
 sys.path.insert(0, src_dir)
 sys.path.append(this_dir)
 
+print("used this command to activate:", activate_this)
 print("Running on python", sys.version)
 print("Interpreter", sys.executable)
 print("Set up with source dir", src_dir)

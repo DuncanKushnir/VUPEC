@@ -1,4 +1,7 @@
+import os
+
 from flask import redirect
+from flask import send_file
 from flask import url_for
 from flask import render_template
 from flask import flash
@@ -17,6 +20,17 @@ from gui.forms import (
 from gui.data_routes import *
 
 from model import api
+
+
+def sendfile(full_file_path):
+    filename = os.path.basename(full_file_path)
+    try:
+        return send_file(
+            full_file_path,
+            as_attachment=True,
+            attachment_filename=filename)
+    except Exception as e:
+        return str(e)
 
 
 @app.route("/", methods=(["GET", "POST"]))
@@ -70,11 +84,8 @@ def submit():
                 filtered_params[k][key] = val
 
     run_params = api.model_setup.basic_setup_from_web_api(filtered_params)
-    results = api.run_model(*run_params, output_result=True)
-    # return {"submitted_params": submitted_params, "filtered_params": filtered_params}
-    flash("Success!  Model saved in output folder")
-
-    return redirect("/")
+    results, out_filename = api.run_model(*run_params, output_result=True)
+    return sendfile(out_filename)
 
 
 @app.route("/updatescenario", methods=(["GET", "POST"]))

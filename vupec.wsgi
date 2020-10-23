@@ -1,5 +1,7 @@
 """
-This file is a shim to allow the program to function on a WSGI interface for an Apache server
+This file is a shim to allow the program to function on a WSGI interface for an Apache server.
+Requires mod_wsgi to be compiled against a python >3.6 target, or use
+sudo apt-get install libapache2-mod-wsgi-py3 to replace the standard mod_wsgi target.
 """
 
 import sys

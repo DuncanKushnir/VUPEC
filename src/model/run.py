@@ -78,9 +78,11 @@ def run(global_parameters, vehicles, drive_cycle, output_result=False):
             cycle_economym = GALUS_L / (cycle_economy / 100 * MILE_KM)
             print("cycle_economy:", cycle_economym, "mpg")
 
+    out_filepath = None
     if output_result:
-        output.output_model_run(global_parameters, results)
-    return results
+        out_filepath = output.output_model_run(global_parameters, results)
+    print('RETURNING', results, out_filepath)
+    return results, out_filepath
 
 
 if __name__ == "__main__":

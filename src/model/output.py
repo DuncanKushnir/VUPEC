@@ -17,3 +17,4 @@ def output_model_run(global_parameters, result_dfs):
     for result in result_dfs:
         result.to_excel(writer, sheet_name=str(result._output_name))
     writer.close()
+    return output_data_filename

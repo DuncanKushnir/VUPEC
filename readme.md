@@ -8,6 +8,9 @@ Initial development has been funded by energimydigheten.se as part of the ERA-NE
 
 The model is still under intensive development.  Contact the author if there are any questions or
  if you want capabilities included. 
+ 
+Link to latest description report: 
+www.duncankushnir.net/doc-vupec.pdf
 
 ## Purpose
 To provide an accurate and modifiable model for calculating the energy requirements of vehicles. 

@@ -26,9 +26,8 @@ def sendfile(full_file_path):
     filename = os.path.basename(full_file_path)
     try:
         return send_file(
-            full_file_path,
-            as_attachment=True,
-            attachment_filename=filename)
+            full_file_path, as_attachment=True, attachment_filename=filename
+        )
     except Exception as e:
         return str(e)
 

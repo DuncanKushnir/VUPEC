@@ -54,9 +54,9 @@ def sink_energy(global_params, vehicle, model_df):
     """
     wheel_energy_to_sink_mask = model_df["energy_wheel"] < 0
     model_df["energy_to_sink"] = 0.0
-    model_df.loc[wheel_energy_to_sink_mask, "energy_to_sink"] = model_df.loc[
-        wheel_energy_to_sink_mask, "energy_wheel"
-    ] * -1
+    model_df.loc[wheel_energy_to_sink_mask, "energy_to_sink"] = (
+        model_df.loc[wheel_energy_to_sink_mask, "energy_wheel"] * -1
+    )
 
     if not vehicle.battery.capacity:
         # First, energy needs of engine and accessories

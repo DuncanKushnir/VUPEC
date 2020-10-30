@@ -118,7 +118,16 @@ if __name__ == "__main__":
     print(model["loss_drag"].sum(), "J lost to drag")
 
     print(model["loss_friction_brake"].sum(), "J lost to braking")
-    print('TOTAL', sum([model["loss_rolling"].sum(), model["loss_drag"].sum(), model["loss_friction_brake"].sum()]))
+    print(
+        "TOTAL",
+        sum(
+            [
+                model["loss_rolling"].sum(),
+                model["loss_drag"].sum(),
+                model["loss_friction_brake"].sum(),
+            ]
+        ),
+    )
 
     print(model["energy_from_engine"].sum(), "J from engine at brake")
 

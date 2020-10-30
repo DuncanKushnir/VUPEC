@@ -81,7 +81,7 @@ def run(global_parameters, vehicles, drive_cycle, output_result=False):
     out_filepath = None
     if output_result:
         out_filepath = output.output_model_run(global_parameters, results)
-    print('RETURNING', results, out_filepath)
+    print("RETURNING", results, out_filepath)
     return results, out_filepath
 
 

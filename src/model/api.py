@@ -1,4 +1,5 @@
 import os
+
 try:
     import matplotlib.pyplot as plt
 except:
@@ -52,8 +53,9 @@ def setup_alternate_model(new_params):
 
 def run_model(global_params, vehicles, drive_cycle, output_result=False):
     print(global_params, vehicles, drive_cycle)
-    result, out_filepath = run.run(global_params, vehicles, drive_cycle,
-                       output_result=output_result)
+    result, out_filepath = run.run(
+        global_params, vehicles, drive_cycle, output_result=output_result
+    )
     return result, out_filepath
 
 

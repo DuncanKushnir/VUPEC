@@ -1,4 +1,6 @@
 """App configuration."""
+VERSION = "0.8.1"
+
 
 from os import environ, path
 

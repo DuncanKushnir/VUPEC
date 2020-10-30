@@ -110,3 +110,25 @@ class PetrolMotor(Motor):
             eff_torque = 1
 
         return eff_rpm * eff_torque
+
+
+if __name__ == "__main__":
+    # Generate diagrams to illustrate
+    import matplotlib.pyplot as plt
+    import numpy as np
+    import seaborn as sns
+
+    E = PetrolMotor()
+    E = ElectricMotor()
+    rpms = np.arange(0, 6000, 250)
+    torques = np.arange(300, 0, -25)
+    result = []
+    for torque in torques:
+        for rpm in rpms:
+            result.append(E.instant_efficiency(torque, rpm))
+    result = np.reshape(result, (len(torques), len(rpms)))
+    print(result)
+    ax = sns.heatmap(result, linewidth=0.5, yticklabels=torques, xticklabels=rpms)
+    ax.set(xlabel="rpm", ylabel="torque (N.m)")
+
+    plt.show()
